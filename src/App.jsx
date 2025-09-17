@@ -10,20 +10,20 @@ import ContactoPage from './pages/ContactoPage'
 import ConfiguracionPage from './pages/ConfiguracionPage'
 import { UserPrefsProvider, useUserPrefs } from './context/UserPrefsContext'
 
-// Sefirot data with exact frequencies from modelo.md
+// Sefirot data with exact structure from modelo.md
 const SEFIROT_DATA = [
-  { name: 'Keter', hebrew: 'כתר', frequency: 999, color: '#ffffff', x: 200, y: 60 },
-  { name: 'Chokmah', hebrew: 'חכמה', frequency: 888, color: '#4a90e2', x: 120, y: 140 },
-  { name: 'Binah', hebrew: 'בינה', frequency: 777, color: '#8e44ad', x: 280, y: 140 },
-  { name: "Da'at", hebrew: 'דעת', frequency: 666, color: '#34495e', x: 200, y: 100 },
-  { name: 'Chesed', hebrew: 'חסד', frequency: 555, color: '#3498db', x: 120, y: 260 },
-  { name: 'Geburah', hebrew: 'גבורה', frequency: 444, color: '#e74c3c', x: 280, y: 260 },
-  { name: 'Tiferet', hebrew: 'תפארת', frequency: 528, color: '#f39c12', x: 200, y: 200 },
-  { name: 'Netzach', hebrew: 'נצח', frequency: 333, color: '#27ae60', x: 120, y: 380 },
-  { name: 'Hod', hebrew: 'הוד', frequency: 222, color: '#9b59b6', x: 280, y: 380 },
-  { name: 'Yesod', hebrew: 'יסוד', frequency: 111, color: '#1abc9c', x: 200, y: 320 },
-  { name: 'Malkut', hebrew: 'מלכות', frequency: 256, color: '#95a5a6', x: 200, y: 440 }
-]
+  {"id":"maljut","nombre":"Maljut — Reino / Manifestación","chakra":"Raíz","frecuenciaHz":174,"comando":"Yo anclo la luz en la materia, manifiesto abundancia y orden en mi vida terrenal. Hecho está.","tooltip":"Frecuencia de arraigo y presencia corporal.","orden":1},
+  {"id":"yesod","nombre":"Yesod — Fundamento / Soporte","chakra":"Sacro","frecuenciaHz":285,"comando":"Yo activo el fundamento sagrado, alineo mis emociones y creo puentes de energía para manifestar lo invisible. Hecho está.","tooltip":"Integración etérica y emocional.","orden":2},
+  {"id":"hod","nombre":"Hod — Esplendor / Mente brillante","chakra":"Plexo solar (aspecto mental)","frecuenciaHz":396,"comando":"Yo despierto la claridad del esplendor, comunico con verdad y libero mi creatividad en forma divina. Hecho está.","tooltip":"Liberación de peso mental, claridad expresiva.","orden":3},
+  {"id":"netsaj","nombre":"Nétsaj — Victoria / Persistencia","chakra":"Plexo solar (voluntad)","frecuenciaHz":432,"comando":"Yo activo la energía de la victoria, avanzo con confianza y sostengo mis metas con perseverancia. Hecho está.","tooltip":"Coherencia, vitalidad y avance.","orden":4},
+  {"id":"tiferet","nombre":"Tiféret — Belleza / Armonía","chakra":"Corazón","frecuenciaHz":528,"comando":"Yo equilibro mi corazón con la verdad, integro amor y fuerza en perfecta armonía. Hecho está.","tooltip":"Coherencia cardíaca, integración.","orden":5},
+  {"id":"guevura","nombre":"Guevurá — Rigor / Fuerza","chakra":"Plexo (disciplina, límites)","frecuenciaHz":417,"comando":"Yo despierto el poder del límite sagrado, fortalezco mi voluntad y sostengo mi vida con disciplina. Hecho está.","tooltip":"Orden, corte de inercia, foco.","orden":6},
+  {"id":"jesed","nombre":"Jésed — Misericordia / Amor expansivo","chakra":"Corazón (compasión)","frecuenciaHz":639,"comando":"Yo activo la misericordia infinita, irradio compasión y amor incondicional en cada célula de mi ser. Hecho está.","tooltip":"Apertura afectiva, conexión.","orden":7},
+  {"id":"bina","nombre":"Biná — Entendimiento / Estructura","chakra":"Garganta / Tercer ojo (discernimiento)","frecuenciaHz":741,"comando":"Yo ordeno mis pensamientos con discernimiento, transformo la comprensión en acción justa y equilibrada. Hecho está.","tooltip":"Purificación mental, orden.","orden":8},
+  {"id":"jojma","nombre":"Jojmá — Sabiduría / Visión","chakra":"Tercer ojo (intuición)","frecuenciaHz":852,"comando":"Yo despierto la chispa de la sabiduría interior, libero la claridad y el entendimiento profundo en mi mente. Hecho está.","tooltip":"Intuición, visión superior.","orden":9},
+  {"id":"keter","nombre":"Kéter — Corona / Conexión divina","chakra":"Corona","frecuenciaHz":963,"comando":"Yo activo la luz pura de la creación, abro mi conciencia al Todo y recibo la sabiduría de la Fuente. Hecho está.","tooltip":"Unidad, estado contemplativo.","orden":10},
+  {"id":"daat","nombre":"Da'at — Puente de conciencia (opcional)","chakra":"Entre ceja y corona (integración)","frecuenciaHz":936,"comando":"Yo integro sabiduría y entendimiento en presencia consciente. Que el conocimiento se asiente en verdad. Hecho está.","tooltip":"Integración de mente superior.","orden":0,"opcional":true}
+].sort((a, b) => a.orden - b.orden);
 
 const navItems = [
   { id: 'home', title: 'Inicio', icon: '🏠' },
@@ -42,6 +42,15 @@ function AppContent() {
   const [toastMessage, setToastMessage] = React.useState('')
   const [showConfig, setShowConfig] = React.useState(false)
 
+  const handleLogout = () => {
+    // Simular cierre de sesión - reinicia la aplicación
+    setCurrentPage('home')
+    setShowConfig(false)
+    setShowSplash(true)
+    // Aquí podrías limpiar localStorage si fuera necesario
+    // localStorage.clear()
+  }
+
   const handleSefirahClick = (sefirah) => {
     if (playingFrequency === sefirah.frequency) {
       setPlayingFrequency(null)
@@ -59,11 +68,7 @@ function AppContent() {
     if (showConfig) {
       return (
         <ConfiguracionPage
-          theme={theme}
-          setTheme={setTheme}
-          volume={volume}
-          setVolume={setVolume}
-          themePalettes={themePalettes}
+          onLogout={handleLogout}
         />
       )
     }
@@ -72,14 +77,11 @@ function AppContent() {
       case 'home':
         return (
           <HomePage
-            sefirotData={SEFIROT_DATA}
-            playingFrequency={playingFrequency}
-            onSefirahClick={handleSefirahClick}
-            onFrequencyToggle={handleFrequencyToggle}
+            onNavigate={(page) => setCurrentPage(page.replace('/', ''))}
           />
         )
       case 'comandos':
-        return <ComandosPage sefirotData={SEFIROT_DATA} />
+        return <ComandosPage />
       case 'sesiones':
         return <SesionesPage />
       case 'quien-soy':
@@ -89,10 +91,7 @@ function AppContent() {
       default:
         return (
           <HomePage
-            sefirotData={SEFIROT_DATA}
-            playingFrequency={playingFrequency}
-            onSefirahClick={handleSefirahClick}
-            onFrequencyToggle={handleFrequencyToggle}
+            onNavigate={(page) => setCurrentPage(page.replace('/', ''))}
           />
         )
     }
