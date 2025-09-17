@@ -186,13 +186,26 @@ export default function SesionesPage() {
 
             {/* Opening Modal */}
             {showOpeningModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setShowOpeningModal(false)}>
-                    <div className="bg-[var(--card-bg)] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8" onClick={e => e.stopPropagation()}>
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-2xl font-serif text-[var(--heading-color)]">Apertura de la sesión y limpieza del espacio</h3>
+                <div 
+                    className="fixed inset-0 bg-black/80 z-50 overflow-y-auto backdrop-blur-sm" 
+                    onClick={() => setShowOpeningModal(false)}
+                >
+                    <div 
+                        className="bg-[var(--card-bg)] rounded-xl max-w-2xl w-full mx-auto mt-8 mb-8 p-6 sm:p-8 shadow-2xl border border-[var(--primary-color)]/20 relative" 
+                        onClick={e => e.stopPropagation()}
+                        style={{
+                            marginTop: '2rem',
+                            marginBottom: '2rem',
+                            backgroundColor: 'var(--card-bg)',
+                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
+                        }}
+                    >
+                        <div className="flex justify-between items-center mb-6 pb-4 border-b border-[var(--primary-color)]/20">
+                            <h3 className="text-2xl font-serif text-[var(--heading-color)]">Apertura de la sesión</h3>
                             <button 
                                 onClick={() => setShowOpeningModal(false)}
-                                className="text-[var(--text-color)] hover:text-[var(--primary-color)] transition-colors"
+                                className="text-[var(--text-color)] hover:text-[var(--primary-color)] transition-colors p-2 hover:bg-[var(--primary-color)]/10 rounded-full"
+                                aria-label="Cerrar modal"
                             >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -202,25 +215,27 @@ export default function SesionesPage() {
                         </div>
                         
                         <div className="space-y-6">
-                            <div className="bg-[var(--primary-color)]/10 p-4 rounded-lg">
-                                <h4 className="font-bold text-[var(--primary-color)] mb-3">1. Limpia el espacio</h4>
+                            <div className="bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--primary-color)]/15 p-6 rounded-lg border-l-4 border-[var(--primary-color)] backdrop-blur-sm" style={{ backgroundColor: 'rgba(var(--card-bg-rgb, 30, 30, 45), 0.95)' }}>
+                                <h4 className="font-bold text-[var(--primary-color)] mb-3 text-lg">🌟 1. Limpia el espacio</h4>
                                 <p className="text-[var(--text-color)] leading-relaxed">
                                     Limpia el espacio con algún spray áurico, sahumo y haz unas pequeñas respiraciones para conectar con el momento presente.
                                 </p>
                             </div>
                             
-                            <div className="bg-[var(--primary-color)]/10 p-4 rounded-lg">
-                                <h4 className="font-bold text-[var(--primary-color)] mb-3">2. Comando de Apertura</h4>
-                                <p className="italic text-[var(--text-color)] leading-relaxed">
-                                    "{openingCommand}"
-                                </p>
+                            <div className="bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--primary-color)]/15 p-6 rounded-lg border-l-4 border-[var(--primary-color)] backdrop-blur-sm" style={{ backgroundColor: 'rgba(var(--card-bg-rgb, 30, 30, 45), 0.95)' }}>
+                                <h4 className="font-bold text-[var(--primary-color)] mb-3 text-lg">✨ 2. Comando de Apertura</h4>
+                                <div className="bg-[var(--card-bg)] p-4 rounded-lg border border-[var(--primary-color)]/30 shadow-inner" style={{ backgroundColor: 'rgba(var(--card-bg-rgb, 20, 20, 35), 0.98)' }}>
+                                    <p className="italic text-[var(--text-color)] leading-relaxed text-center font-medium">
+                                        "{openingCommand}"
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         
-                        <div className="mt-8 text-center">
+                        <div className="mt-8 text-center pt-6 border-t border-[var(--primary-color)]/20">
                             <button 
                                 onClick={() => setShowOpeningModal(false)}
-                                className="bg-[var(--primary-color)] text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
+                                className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color)]/80 text-white px-8 py-3 rounded-lg hover:opacity-90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
                             >
                                 Entendido, continuar
                             </button>

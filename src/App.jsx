@@ -26,11 +26,51 @@ const SEFIROT_DATA = [
 ].sort((a, b) => a.orden - b.orden);
 
 const navItems = [
-  { id: 'home', title: 'Inicio', icon: '🏠' },
-  { id: 'comandos', title: 'Comandos', icon: '⚡' },
-  { id: 'sesiones', title: 'Sesiones', icon: '📊' },
-  { id: 'quien-soy', title: 'Quién Soy', icon: '👤' },
-  { id: 'contacto', title: 'Contacto', icon: '📧' }
+  { 
+    id: 'home', 
+    title: 'Inicio', 
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z"/>
+      </svg>
+    )
+  },
+  { 
+    id: 'comandos', 
+    title: 'Comandos', 
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+    )
+  },
+  { 
+    id: 'sesiones', 
+    title: 'Sesiones', 
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+      </svg>
+    )
+  },
+  { 
+    id: 'quien-soy', 
+    title: 'Quién Soy', 
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+      </svg>
+    )
+  },
+  { 
+    id: 'contacto', 
+    title: 'Contacto', 
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+      </svg>
+    )
+  }
 ]
 
 function AppContent() {
@@ -41,6 +81,7 @@ function AppContent() {
   const [playingFrequency, setPlayingFrequency] = React.useState(null)
   const [toastMessage, setToastMessage] = React.useState('')
   const [showConfig, setShowConfig] = React.useState(false)
+  const [isTransitioning, setIsTransitioning] = React.useState(false)
 
   const handleLogout = () => {
     // Simular cierre de sesión - reinicia la aplicación
@@ -49,6 +90,17 @@ function AppContent() {
     setShowSplash(true)
     // Aquí podrías limpiar localStorage si fuera necesario
     // localStorage.clear()
+  }
+
+  const handlePageNavigation = (pageId) => {
+    if (pageId === currentPage && !showConfig) return
+    
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentPage(pageId)
+      setShowConfig(false)
+      setIsTransitioning(false)
+    }, 150)
   }
 
   const handleSefirahClick = (sefirah) => {
@@ -77,7 +129,7 @@ function AppContent() {
       case 'home':
         return (
           <HomePage
-            onNavigate={(page) => setCurrentPage(page.replace('/', ''))}
+            onNavigate={(page) => handlePageNavigation(page.replace('/', ''))}
           />
         )
       case 'comandos':
@@ -85,13 +137,13 @@ function AppContent() {
       case 'sesiones':
         return <SesionesPage />
       case 'quien-soy':
-        return <QuienSoyPage />
+        return <QuienSoyPage onNavigate={handlePageNavigation} />
       case 'contacto':
         return <ContactoPage />
       default:
         return (
           <HomePage
-            onNavigate={(page) => setCurrentPage(page.replace('/', ''))}
+            onNavigate={(page) => handlePageNavigation(page.replace('/', ''))}
           />
         )
     }
@@ -103,22 +155,29 @@ function AppContent() {
 
   return (
     <div className="min-h-screen">
-      {renderCurrentPage()}
+      <div className={`transition-all duration-300 ease-in-out ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+        {renderCurrentPage()}
+      </div>
       
       <NavbarDock
         currentPage={showConfig ? 'config' : currentPage}
-        onNavigate={(pageId) => {
-          setCurrentPage(pageId)
-          setShowConfig(false)
-        }}
+        onNavigate={handlePageNavigation}
         navItems={navItems}
-        onConfigClick={() => setShowConfig(!showConfig)}
+        onConfigClick={() => {
+          setIsTransitioning(true)
+          setTimeout(() => {
+            setShowConfig(!showConfig)
+            setIsTransitioning(false)
+          }, 150)
+        }}
       />
 
-      <Toast
-        message={toastMessage}
-        onDismiss={() => setToastMessage('')}
-      />
+      {toastMessage && (
+        <Toast 
+          message={toastMessage} 
+          onClose={() => setToastMessage('')}
+        />
+      )}
     </div>
   )
 }

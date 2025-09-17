@@ -1,7 +1,7 @@
 import React from 'react'
 import PageWrapper from '../components/PageWrapper'
 
-export default function QuienSoyPage() {
+export default function QuienSoyPage({ onNavigate }) {
   const [showModal, setShowModal] = React.useState(false)
 
   return (
@@ -96,7 +96,9 @@ export default function QuienSoyPage() {
                 <button 
                   onClick={() => {
                     setShowModal(false)
-                    window.location.href = '/contacto'
+                    if (onNavigate) {
+                      onNavigate('contacto')
+                    }
                   }}
                   className="bg-gradient-to-r from-[var(--primary-color)] to-purple-600 text-white px-8 py-3 rounded-full text-lg font-bold hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-md"
                 >
