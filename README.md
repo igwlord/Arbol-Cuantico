@@ -1,4 +1,29 @@
-# Árbol Cuántico - Réplica Completa ✅
+# Árbol Cuántico - עץ קוונטי ✨
+
+[![GitHub](https://img.shields.io/badge/GitHub-Arbol--Cuantico-blue?logo=github)](https://github.com/igwlord/Arbol-Cuantico)
+[![React](https://img.shields.io/badge/React-18.3.1-blue?logo=react)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4.7-purple?logo=vite)](https://vitejs.dev/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-3.4.9-cyan?logo=tailwindcss)](https://tailwindcss.com/)
+
+Una aplicación interactiva que combina la sabiduría ancestral de la Cábala con los principios de la física cuántica moderna, creando una experiencia inmersiva de exploración sonora y visual del Árbol de la Vida.
+
+## 🚀 Instalación Rápida
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/igwlord/Arbol-Cuantico.git
+
+# Navegar al directorio
+cd Arbol-Cuantico
+
+# Instalar dependencias
+npm install
+
+# Ejecutar la aplicación
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173/`
 
 ## Estado Final del Proyecto
 
@@ -102,10 +127,31 @@ C:\Users\juego\OneDrive\Escritorio\Arbol\labo\
 - Comandos y sesiones replicados
 - Información personal preservada
 
-## 🚀 Estado del Servidor
+## 🌐 GitHub Repository
+
+**� Repositorio:** https://github.com/igwlord/Arbol-Cuantico
+
+### 📥 Clonación e Instalación
+
+```bash
+# Clonar repositorio
+git clone https://github.com/igwlord/Arbol-Cuantico.git
+
+# Instalar dependencias  
+cd Arbol-Cuantico
+npm install
+
+# Ejecutar en desarrollo
+npm run dev
+
+# Build para producción
+npm run build
+```
+
+## �🚀 Estado del Servidor
 
 **✅ APLICACIÓN EJECUTÁNDOSE**
-- 🌐 URL: http://localhost:5174/
+- 🌐 URL Local: http://localhost:5173/
 - 🔧 Framework: React 18 + Vite
 - 🎨 Styling: Tailwind CSS
 - 🔊 Audio: WebAudio API
