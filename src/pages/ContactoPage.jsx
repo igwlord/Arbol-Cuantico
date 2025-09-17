@@ -308,26 +308,6 @@ export default function ContactoPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-[var(--primary-color)] to-purple-600 rounded-lg p-6 text-white text-center animate-fade-in-delay-4">
-          <h3 className="text-xl font-semibold mb-2">
-            🌟 Únete a la Comunidad
-          </h3>
-          <p className="mb-4">
-            Comparte tus experiencias y aprende de otros exploradores cuánticos
-          </p>
-          <div className="flex justify-center space-x-4">
-            <button className="bg-white bg-opacity-20 px-4 py-2 rounded-lg hover:bg-opacity-30 transition-all">
-              Discord
-            </button>
-            <button className="bg-white bg-opacity-20 px-4 py-2 rounded-lg hover:bg-opacity-30 transition-all">
-              Telegram
-            </button>
-            <button className="bg-white bg-opacity-20 px-4 py-2 rounded-lg hover:bg-opacity-30 transition-all">
-              YouTube
-            </button>
-          </div>
-        </div>
-
         <Toast show={!!toastMessage} message={toastMessage} />
       </div>
     </PageWrapper>
