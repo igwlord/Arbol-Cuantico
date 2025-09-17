@@ -1,6 +1,39 @@
 # Árbol Cuántico - עץ קוונטי ✨
 
-[![GitHub](https://img.shields.io/badge/GitHub-Arbol--Cuantico-blue?logo=github)](https://github.com/igwlord/Arbol-Cuantico)
+[![GitHub](https://img.shields.io/badge/GitHub-Arbol--Cuantico-blue?logo=github)](https://githu## 🌐 Despliegue
+
+### GitHub Repository
+**🔗 Repositorio:** https://github.com/igwlord/Arbol-Cuantico
+
+### Netlify Deploy
+[![Netlify Status](https://api.netlify.com/api/v1/badges/your-site-id/deploy-status.svg)](https://app.netlify.com/sites/your-site-name/deploys)
+
+**🚀 Deploy directo desde GitHub:**
+1. Conecta el repositorio a [Netlify](https://netlify.com)
+2. La configuración está en `netlify.toml`
+3. Build automático en cada push a `main`
+
+Ver `DEPLOY.md` para instrucciones detalladas.
+
+### 📥 Clonación e Instalación
+
+```bash
+# Clonar repositorio
+git clone https://github.com/igwlord/Arbol-Cuantico.git
+
+# Instalar dependencias  
+cd Arbol-Cuantico
+npm install
+
+# Ejecutar en desarrollo
+npm run dev
+
+# Build para producción
+npm run build
+
+# Preview del build
+npm run preview
+```Cuantico)
 [![React](https://img.shields.io/badge/React-18.3.1-blue?logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4.7-purple?logo=vite)](https://vitejs.dev/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-3.4.9-cyan?logo=tailwindcss)](https://tailwindcss.com/)

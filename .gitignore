@@ -18,6 +18,9 @@ build/
 .env.test.local
 .env.production.local
 
+# Netlify
+.netlify/
+
 # Editor directories and files
 .vscode/
 .idea/
