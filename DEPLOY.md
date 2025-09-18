@@ -80,8 +80,8 @@ netlify deploy --prod
 ### 9. URLs del Proyecto
 
 Después del despliegue:
-- **URL temporal:** `https://random-name-123456.netlify.app`
-- **URL personalizada:** Configurable en Netlify
+- **URL principal:** `https://arbol-cuantico.netlify.app`
+- **URL personalizada:** Configurable en Netlify si tienes dominio propio
 
 ### 10. Monitoreo
 

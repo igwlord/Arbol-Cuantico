@@ -6,7 +6,9 @@
 **🔗 Repositorio:** https://github.com/igwlord/Arbol-Cuantico
 
 ### Netlify Deploy
-[![Netlify Status](https://api.netlify.com/api/v1/badges/your-site-id/deploy-status.svg)](https://app.netlify.com/sites/your-site-name/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/your-site-id/deploy-status.svg)](https://app.netlify.com/sites/arbol-cuantico/deploys)
+
+**🌐 Sitio web:** https://arbol-cuantico.netlify.app
 
 **🚀 Deploy directo desde GitHub:**
 1. Conecta el repositorio a [Netlify](https://netlify.com)

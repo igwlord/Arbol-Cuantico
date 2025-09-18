@@ -66,7 +66,7 @@ Enviado desde arbolcuantico.com`
     const mensajeCodificado = encodeURIComponent(mensajeWhatsApp)
     
     // Número de WhatsApp (sin espacios ni símbolos)
-    const numeroWhatsApp = "549112124207"
+    const numeroWhatsApp = "5491125124207"
     
     // Crear URL de WhatsApp
     const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`

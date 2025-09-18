@@ -309,55 +309,91 @@ export default function SesionesPage() {
             {/* Opening Modal */}
             {showOpeningModal && (
                 <div 
-                    className="fixed inset-0 bg-black/80 z-50 overflow-y-auto backdrop-blur-sm flex items-start sm:items-center justify-center p-2 sm:p-4" 
+                    className="fixed inset-0 bg-black/90 z-50 overflow-y-auto backdrop-blur-sm flex items-start justify-center p-3" 
                     onClick={() => setShowOpeningModal(false)}
                 >
                     <div 
-                        className="bg-[var(--card-bg)] rounded-xl max-w-2xl w-full mt-4 sm:mt-0 mb-4 sm:mb-0 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto p-4 sm:p-6 md:p-8 shadow-2xl border border-[var(--primary-color)]/20 relative flex flex-col" 
+                        className="bg-[var(--card-bg)] rounded-2xl max-w-md sm:max-w-2xl w-full mt-6 mb-6 max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--primary-color)]/30 relative flex flex-col" 
                         onClick={e => e.stopPropagation()}
                         style={{
                             backgroundColor: 'var(--card-bg)',
                             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
                         }}
                     >
-                        <div className="flex justify-between items-center mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-[var(--primary-color)]/20 flex-shrink-0">
-                            <h3 className="text-lg sm:text-2xl font-serif text-[var(--heading-color)]">Apertura de la sesión</h3>
-                            <button 
-                                onClick={() => setShowOpeningModal(false)}
-                                className="text-[var(--text-color)] hover:text-[var(--primary-color)] transition-colors p-1 sm:p-2 hover:bg-[var(--primary-color)]/10 rounded-full flex-shrink-0"
-                                aria-label="Cerrar modal"
-                            >
-                                <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
+                        {/* Header mejorado para móviles */}
+                        <div className="bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 p-4 sm:p-6 rounded-t-2xl border-b border-[var(--primary-color)]/20 flex-shrink-0">
+                            <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                    <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)] mb-1">✨ Apertura de Sesión</h3>
+                                    <p className="text-sm text-[var(--text-color)]/70">Paso 1: Preparación del espacio sagrado</p>
+                                </div>
+                                <button 
+                                    onClick={() => setShowOpeningModal(false)}
+                                    className="ml-3 w-8 h-8 rounded-full bg-[var(--primary-color)]/10 hover:bg-[var(--primary-color)]/20 text-[var(--text-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center flex-shrink-0"
+                                    aria-label="Cerrar modal"
+                                >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         
-                        <div className="space-y-4 sm:space-y-6 flex-1">
-                            <div className="bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--primary-color)]/15 p-4 sm:p-6 rounded-lg border-l-4 border-[var(--primary-color)] backdrop-blur-sm" style={{ backgroundColor: 'rgba(var(--card-bg-rgb, 30, 30, 45), 0.95)' }}>
-                                <h4 className="font-bold text-[var(--primary-color)] mb-2 sm:mb-3 text-base sm:text-lg">🌟 1. Limpia el espacio</h4>
-                                <p className="text-[var(--text-color)] leading-relaxed text-sm sm:text-base">
-                                    Limpia el espacio con algún spray áurico, sahumo y haz unas pequeñas respiraciones para conectar con el momento presente.
-                                </p>
+                        {/* Contenido optimizado para móviles */}
+                        <div className="p-4 sm:p-6 space-y-5 flex-1">
+                            
+                            {/* Paso 1: Limpieza */}
+                            <div className="bg-gradient-to-r from-green-500/10 via-green-500/5 to-transparent p-4 rounded-xl border-l-4 border-green-500">
+                                <div className="flex items-start gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <span className="text-lg">🌿</span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="font-bold text-green-400 mb-2 text-base">Limpia el espacio</h4>
+                                        <p className="text-[var(--text-color)]/80 text-sm leading-relaxed">
+                                            Usa spray áurico, sahumo o incienso. Respira profundo para conectar con el momento presente.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <div className="bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--primary-color)]/15 p-4 sm:p-6 rounded-lg border-l-4 border-[var(--primary-color)] backdrop-blur-sm" style={{ backgroundColor: 'rgba(var(--card-bg-rgb, 30, 30, 45), 0.95)' }}>
-                                <h4 className="font-bold text-[var(--primary-color)] mb-2 sm:mb-3 text-base sm:text-lg">✨ 2. Comando de Apertura</h4>
-                                <div className="bg-[var(--card-bg)] p-3 sm:p-4 rounded-lg border border-[var(--primary-color)]/30 shadow-inner" style={{ backgroundColor: 'rgba(var(--card-bg-rgb, 20, 20, 35), 0.98)' }}>
-                                    <p className="italic text-[var(--text-color)] leading-relaxed text-center font-medium text-sm sm:text-base">
-                                        "{openingCommand}"
-                                    </p>
+                            {/* Paso 2: Comando */}
+                            <div className="bg-gradient-to-r from-[var(--primary-color)]/10 via-[var(--primary-color)]/5 to-transparent p-4 rounded-xl border-l-4 border-[var(--primary-color)]">
+                                <div className="flex items-start gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-[var(--primary-color)]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <span className="text-lg">✨</span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="font-bold text-[var(--primary-color)] mb-3 text-base">Comando de Apertura</h4>
+                                        <div className="bg-[var(--card-bg)] p-4 rounded-lg border border-[var(--primary-color)]/20 shadow-inner">
+                                            <p className="text-[var(--text-color)] text-sm leading-relaxed text-center italic font-medium">
+                                                "{openingCommand}"
+                                            </p>
+                                        </div>
+                                        <div className="mt-3 text-xs text-[var(--text-color)]/60 text-center">
+                                            💡 Recita este comando en voz alta con intención clara
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Recordatorio adicional */}
+                            <div className="bg-gradient-to-r from-purple-500/10 via-purple-500/5 to-transparent p-3 rounded-lg border border-purple-500/20">
+                                <div className="flex items-center gap-2 text-purple-400 text-sm">
+                                    <span>🔮</span>
+                                    <span className="font-medium">Mantén la intención pura y el corazón abierto durante todo el proceso</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <div className="mt-6 sm:mt-8 text-center pt-4 sm:pt-6 border-t border-[var(--primary-color)]/20 flex-shrink-0">
+                        {/* Footer del modal */}
+                        <div className="p-4 sm:p-6 bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/95 border-t border-[var(--primary-color)]/10 rounded-b-2xl flex-shrink-0">
                             <button 
                                 onClick={() => setShowOpeningModal(false)}
-                                className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color)]/80 text-white px-6 py-3 sm:px-8 sm:py-3 rounded-lg hover:opacity-90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl w-full sm:w-auto text-sm sm:text-base"
+                                className="w-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color)]/80 text-white px-6 py-3 rounded-full hover:opacity-90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl text-sm sm:text-base"
                             >
-                                Entendido, continuar
+                                ✓ Entendido, continuar con la sesión
                             </button>
                         </div>
                     </div>
