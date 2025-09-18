@@ -4,12 +4,6 @@ import { useAudio } from '../context/AudioContext'
 const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
   const { currentlyPlaying, isPlaying, startPlaying, stopPlaying, togglePlaying, isSefirotPlaying } = useAudio()
   const [isLoading, setIsLoading] = React.useState(false)
-  const [toastMessage, setToastMessage] = React.useState('')
-  
-  const showToast = React.useCallback((message) => {
-    setToastMessage(message)
-    setTimeout(() => setToastMessage(''), 3000)
-  }, [])
   
   // Estado del botón para este sefirot específico
   const isThisSefirotPlaying = isSefirotPlaying(sefirotId)
@@ -19,39 +13,62 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
     try {
       setIsLoading(true)
       
+      // Verificar que el archivo existe antes de crear el Audio
+      const audioPath = `/audio/${hz}.mp3`
+      
       // Crear nuevo elemento de audio
-      const audio = new Audio(`/audio/${hz}.mp3`)
+      const audio = new Audio(audioPath)
       
       // Configurar audio
       audio.preload = 'auto'
       audio.loop = true
       audio.volume = 0.7
       
+      // Flag para evitar múltiples errores
+      let hasErrored = false
+      
       // Event listeners
       audio.addEventListener('canplaythrough', async () => {
+        if (hasErrored) return
+        
         try {
           await audio.play()
           startPlaying(sefirotId, hz, label, audio)
           setIsLoading(false)
-          showToast(`Reproduciendo ${hz} Hz — ${label}`)
           
           // Configurar listener para cuando termine (si no es loop)
           audio.addEventListener('ended', () => {
             stopPlaying()
-            showToast(`Frecuencia ${hz} Hz completada`)
           })
           
         } catch (error) {
           console.error('Error playing audio:', error)
           setIsLoading(false)
-          showToast('Error al reproducir el audio')
+          if (!hasErrored) {
+            hasErrored = true
+          }
         }
       })
       
       audio.addEventListener('error', (e) => {
+        if (hasErrored) return
+        hasErrored = true
+        
         console.error('Audio loading error:', e)
         setIsLoading(false)
-        showToast('Error al cargar el archivo de audio')
+      })
+      
+      // Timeout para detectar si realmente hay un problema
+      const loadTimeout = setTimeout(() => {
+        if (audio.readyState < 2 && !hasErrored) { // Si no ha cargado suficientes datos
+          hasErrored = true
+          setIsLoading(false)
+        }
+      }, 5000) // 5 segundos de timeout
+      
+      // Limpiar timeout cuando carga correctamente
+      audio.addEventListener('canplaythrough', () => {
+        clearTimeout(loadTimeout)
       })
       
       // Iniciar carga
@@ -60,14 +77,12 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
     } catch (error) {
       console.error('Error in handlePlay:', error)
       setIsLoading(false)
-      showToast('Error al inicializar el audio')
     }
-  }, [hz, label, sefirotId, startPlaying, stopPlaying, showToast])
+  }, [hz, label, sefirotId, startPlaying, stopPlaying])
   
   const handleStop = React.useCallback(() => {
     stopPlaying()
-    showToast(`Deteniendo frecuencia ${hz} Hz`)
-  }, [stopPlaying, hz, showToast])
+  }, [stopPlaying])
   
   const handleToggle = React.useCallback(() => {
     if (isThisSefirotPlaying) {
@@ -132,12 +147,6 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
               </span>
             )}
           </p>
-        </div>
-      )}
-      
-      {toastMessage && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in-right">
-          {toastMessage}
         </div>
       )}
     </React.Fragment>

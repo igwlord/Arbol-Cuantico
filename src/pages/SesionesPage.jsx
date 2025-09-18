@@ -1,6 +1,8 @@
 import React from 'react'
 import PageWrapper from '../components/PageWrapper'
 import Toast from '../components/Toast'
+import SefirotMeasurementGrid from '../components/SefirotMeasurementGrid'
+import GlobalMeasurementGrid from '../components/GlobalMeasurementGrid'
 import { useUserPrefs } from '../context/UserPrefsContext'
 import { SEFIROT_DATA } from '../data/index.jsx'
 
@@ -123,13 +125,22 @@ export default function SesionesPage() {
                         onChange={e => setCurrentSession(p => ({...p, consultantName: e.target.value}))}
                         className="form-input text-lg"
                     />
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <label className="block">Energía Global (Antes): <span className="font-bold text-lg">{currentSession.globalBefore}</span>
-                            <input type="range" min="0" max="10" value={currentSession.globalBefore} onChange={e => setCurrentSession(p => ({...p, globalBefore: e.target.value}))} className="w-full mt-2"/>
-                        </label>
-                        <label className="block">Energía Global (Después): <span className="font-bold text-lg">{currentSession.globalAfter}</span>
-                            <input type="range" min="0" max="10" value={currentSession.globalAfter} onChange={e => setCurrentSession(p => ({...p, globalAfter: e.target.value}))} className="w-full mt-2"/>
-                        </label>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <GlobalMeasurementGrid
+                            label="Energía Global (Antes)"
+                            description="Mide la energía inicial del consultante"
+                            value={currentSession.globalBefore}
+                            onChange={(value) => setCurrentSession(p => ({...p, globalBefore: value}))}
+                            color="blue"
+                        />
+                        <GlobalMeasurementGrid
+                            label="Energía Global (Después)"
+                            description="Mide la energía final del consultante"
+                            value={currentSession.globalAfter}
+                            onChange={(value) => setCurrentSession(p => ({...p, globalAfter: value}))}
+                            color="green"
+                        />
                     </div>
                 </fieldset>
 
@@ -139,34 +150,30 @@ export default function SesionesPage() {
                     <p className="text-[var(--text-color)]/80 mb-6 italic">
                         Usar el péndulo para medir en el biometro cada sefira y registrar su estado antes y después de la armonización.
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-                        {SEFIROT_DATA.map(sefira => (
-                            <div key={sefira.id}>
-                                <h4 className="font-bold text-md mb-2">{sefira.nombre.split("—")[0]}</h4>
-                                <div className="space-y-2">
-                                   <label className="block"> Antes: <span className="font-bold">{currentSession.readings[sefira.id].antes}</span>
-                                        <input type="range" min="0" max="10" value={currentSession.readings[sefira.id].antes} onChange={e => handleReadingChange(sefira.id, 'antes', e.target.value)} className="w-full"/>
-                                    </label>
-                                    <label className="block"> Después: <span className="font-bold">{currentSession.readings[sefira.id].despues}</span>
-                                        <input type="range" min="0" max="10" value={currentSession.readings[sefira.id].despues} onChange={e => handleReadingChange(sefira.id, 'despues', e.target.value)} className="w-full"/>
-                                    </label>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    
+                    <SefirotMeasurementGrid
+                        sefirotData={SEFIROT_DATA}
+                        readings={currentSession.readings}
+                        onReadingChange={handleReadingChange}
+                    />
                 </fieldset>
 
                 {/* Step 4: Final Global Measurement and Closing */}
                 <fieldset>
                     <legend className="text-xl sm:text-2xl font-serif text-[var(--heading-color)] mb-4">Paso 4: Medición global y comando de cierre</legend>
                     <div className="space-y-6">
-                        <div className="bg-[var(--primary-color)]/10 p-4 rounded-lg">
+                        <div className="space-y-4">
                             <p className="text-[var(--text-color)] mb-4">
                                 <strong>1.</strong> Mide de nuevo la energía global situándote en el sefira Da'at
                             </p>
-                            <label className="block">Energía Global Final (Da'at): <span className="font-bold text-lg">{currentSession.globalAfter}</span>
-                                <input type="range" min="0" max="10" value={currentSession.globalAfter} onChange={e => setCurrentSession(p => ({...p, globalAfter: e.target.value}))} className="w-full mt-2"/>
-                            </label>
+                            
+                            <GlobalMeasurementGrid
+                                label="Energía Global Final (Da'at)"
+                                description="Medición final de la energía global del consultante"
+                                value={currentSession.globalAfter}
+                                onChange={(value) => setCurrentSession(p => ({...p, globalAfter: value}))}
+                                color="gold"
+                            />
                         </div>
                         
                         <div className="p-4 border border-[var(--primary-color)]/50 rounded-lg">
