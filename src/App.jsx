@@ -9,6 +9,7 @@ import QuienSoyPage from './pages/QuienSoyPage'
 import ContactoPage from './pages/ContactoPage'
 import ConfiguracionPage from './pages/ConfiguracionPage'
 import { UserPrefsProvider, useUserPrefs } from './context/UserPrefsContext'
+import { AudioProvider } from './context/AudioContext'
 
 // Sefirot data with exact structure from modelo.md
 const SEFIROT_DATA = [
@@ -185,7 +186,9 @@ function AppContent() {
 export default function App() {
   return (
     <UserPrefsProvider>
-      <AppContent />
+      <AudioProvider>
+        <AppContent />
+      </AudioProvider>
     </UserPrefsProvider>
   )
 }

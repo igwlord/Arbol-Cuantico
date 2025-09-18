@@ -63,6 +63,66 @@ const StarField = () => {
 };
 
 export default function HomePage({ onNavigate }) {
+  // Estado para controlar qué tarjetas están volteadas
+  const [flippedCards, setFlippedCards] = React.useState({
+    card1: false,
+    card2: false,
+    card3: false,
+    card4: false
+  });
+
+  // Función para voltear tarjetas
+  const toggleCard = (cardId) => {
+    setFlippedCards(prev => ({
+      ...prev,
+      [cardId]: !prev[cardId]
+    }));
+  };
+
+  // Datos de las tarjetas con contenido del frente y reverso
+  const benefitsData = [
+    {
+      id: 'card1',
+      icon: '🌿',
+      title: 'Alivio Inmediato',
+      frontText: 'Tensiones físicas y emocionales se disuelven',
+      backText: 'Descansa en un estado de calma. Tu cuerpo libera bloqueos y tu energía vital fluye con libertad.',
+      gradientColor: 'from-green-400/20 to-emerald-600/20',
+      borderColor: 'border-green-400/30',
+      shadowColor: 'hover:shadow-green-400/20'
+    },
+    {
+      id: 'card2',
+      icon: '💎',
+      title: 'Equilibrio Total',
+      frontText: 'Armonía energética en cuerpos y espacios',
+      backText: 'Siente armonía entre lo físico, lo emocional y lo espiritual. Tus espacios también vibran en coherencia.',
+      gradientColor: 'from-blue-400/20 to-cyan-600/20',
+      borderColor: 'border-blue-400/30',
+      shadowColor: 'hover:shadow-blue-400/20'
+    },
+    {
+      id: 'card3',
+      icon: '✨',
+      title: 'Claridad Mental',
+      frontText: 'Decisiones más sabias y conscientes',
+      backText: 'La mente se despeja, las distracciones se disuelven y aparece una visión clara para tomar decisiones.',
+      gradientColor: 'from-purple-400/20 to-violet-600/20',
+      borderColor: 'border-purple-400/30',
+      shadowColor: 'hover:shadow-purple-400/20'
+    },
+    {
+      id: 'card4',
+      icon: '🌌',
+      title: 'Conexión Profunda',
+      frontText: 'Con tu esencia y propósito de vida',
+      backText: 'Reconecta con tu esencia interior. Descubre un sentido renovado y un propósito más auténtico.',
+      gradientColor: 'from-yellow-400/20 to-orange-600/20',
+      borderColor: 'border-yellow-400/30',
+      shadowColor: 'hover:shadow-yellow-400/20'
+    }
+  ];
+
   return (
     <PageWrapper>
       {/* Hero Section con estrellas sutiles */}
@@ -117,7 +177,7 @@ export default function HomePage({ onNavigate }) {
         </div>
       </section>
 
-      {/* Beneficios con cristales flotantes */}
+      {/* Beneficios con tarjetas flip */}
       <section className="py-20 relative">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl sm:text-4xl font-serif text-[var(--heading-color)] text-center mb-16">
@@ -125,45 +185,34 @@ export default function HomePage({ onNavigate }) {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Beneficio 1 */}
-            <div className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-600/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative bg-[var(--card-bg)] p-8 rounded-2xl border border-green-400/30 shadow-xl hover:shadow-green-400/20 hover:-translate-y-2 transition-all duration-500 text-center">
-                <div className="text-6xl mb-4">🌿</div>
-                <h3 className="text-xl font-bold text-[var(--heading-color)] mb-3">Alivio Inmediato</h3>
-                <p className="text-[var(--text-color)]/80">Tensiones físicas y emocionales se disuelven</p>
-              </div>
-            </div>
+            {benefitsData.map((benefit) => (
+              <div key={benefit.id} className="group relative">
+                <div className={`absolute inset-0 bg-gradient-to-br ${benefit.gradientColor} rounded-full blur-xl group-hover:blur-2xl transition-all duration-500`}></div>
+                
+                {/* Tarjeta Flip */}
+                <div 
+                  className={`flip-card ${flippedCards[benefit.id] ? 'flipped' : ''}`}
+                  onClick={() => toggleCard(benefit.id)}
+                >
+                  <div className="flip-card-inner">
+                    {/* Frente de la tarjeta */}
+                    <div className={`flip-card-front relative bg-[var(--card-bg)] ${benefit.borderColor} shadow-xl ${benefit.shadowColor} hover:-translate-y-2 transition-all duration-500`}>
+                      <div className="text-6xl mb-4">{benefit.icon}</div>
+                      <h3 className="text-xl font-bold text-[var(--heading-color)] mb-3">{benefit.title}</h3>
+                      <p className="text-[var(--text-color)]/80">{benefit.frontText}</p>
+                    </div>
 
-            {/* Beneficio 2 */}
-            <div className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-600/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative bg-[var(--card-bg)] p-8 rounded-2xl border border-blue-400/30 shadow-xl hover:shadow-blue-400/20 hover:-translate-y-2 transition-all duration-500 text-center">
-                <div className="text-6xl mb-4">💎</div>
-                <h3 className="text-xl font-bold text-[var(--heading-color)] mb-3">Equilibrio Total</h3>
-                <p className="text-[var(--text-color)]/80">Armonía energética en cuerpos y espacios</p>
+                    {/* Reverso de la tarjeta */}
+                    <div className="flip-card-back">
+                      <div className="flip-card-back-content">
+                        <h3>{benefit.title}</h3>
+                        <p>"{benefit.backText}"</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            {/* Beneficio 3 */}
-            <div className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-violet-600/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative bg-[var(--card-bg)] p-8 rounded-2xl border border-purple-400/30 shadow-xl hover:shadow-purple-400/20 hover:-translate-y-2 transition-all duration-500 text-center">
-                <div className="text-6xl mb-4">✨</div>
-                <h3 className="text-xl font-bold text-[var(--heading-color)] mb-3">Claridad Mental</h3>
-                <p className="text-[var(--text-color)]/80">Decisiones más sabias y conscientes</p>
-              </div>
-            </div>
-
-            {/* Beneficio 4 */}
-            <div className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-600/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative bg-[var(--card-bg)] p-8 rounded-2xl border border-yellow-400/30 shadow-xl hover:shadow-yellow-400/20 hover:-translate-y-2 transition-all duration-500 text-center">
-                <div className="text-6xl mb-4">🌌</div>
-                <h3 className="text-xl font-bold text-[var(--heading-color)] mb-3">Conexión Profunda</h3>
-                <p className="text-[var(--text-color)]/80">Con tu esencia y propósito de vida</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -231,29 +280,6 @@ export default function HomePage({ onNavigate }) {
               </div>
               <h3 className="text-xl font-bold text-[var(--heading-color)] mt-4 mb-2">Verificar</h3>
               <p className="text-[var(--text-color)]/80 max-w-32">Confirma los cambios logrados</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Experiencia personalizada */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl font-serif text-[var(--heading-color)] mb-12">
-            Experiencia <span className="text-[var(--primary-color)]">personalizada</span>
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-[var(--card-bg)] p-8 rounded-2xl border border-[var(--primary-color)]/20 shadow-xl">
-              <div className="text-5xl mb-4">🎨</div>
-              <h3 className="text-xl font-bold text-[var(--heading-color)] mb-3">Adaptación Visual</h3>
-              <p className="text-[var(--text-color)]/80">Personalizado con tu nombre y tema visual (modo claro / oscuro)</p>
-            </div>
-            
-            <div className="bg-[var(--card-bg)] p-8 rounded-2xl border border-[var(--secondary-color)]/20 shadow-xl">
-              <div className="text-5xl mb-4">🔔</div>
-              <h3 className="text-xl font-bold text-[var(--heading-color)] mb-3">Frecuencias Específicas</h3>
-              <p className="text-[var(--text-color)]/80">Para cada sefirá, chakra y dominio de vida</p>
             </div>
           </div>
         </div>
