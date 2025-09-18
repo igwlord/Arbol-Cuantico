@@ -25,6 +25,29 @@ export default function SesionesPage() {
             [step]: !prev[step]
         }));
     };
+
+    // Función para abrir modal y posicionarlo correctamente
+    const openModal = () => {
+        setShowOpeningModal(true)
+        // Asegurar que el modal aparezca en la parte superior del viewport
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
+    }
+
+    // Bloquear scroll del body cuando el modal está abierto
+    React.useEffect(() => {
+        if (showOpeningModal) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'unset'
+        }
+        
+        // Cleanup al desmontar el componente
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [showOpeningModal])
     
     const initialReadings = SEFIROT_DATA.reduce((acc, sefira) => {
         acc[sefira.id] = { antes: 5, despues: 5 };
@@ -141,7 +164,7 @@ export default function SesionesPage() {
                     <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step1 ? 'max-h-96' : 'max-h-0'} md:max-h-none`}>
                         <div className="p-4 space-y-4">
                             <button 
-                                onClick={() => setShowOpeningModal(true)}
+                                onClick={openModal}
                                 className="w-full bg-[var(--primary-color)] text-white px-6 py-4 rounded-lg hover:opacity-90 transition-opacity text-lg font-semibold"
                             >
                                 Ver instrucciones de apertura y limpieza
@@ -286,11 +309,11 @@ export default function SesionesPage() {
             {/* Opening Modal */}
             {showOpeningModal && (
                 <div 
-                    className="fixed inset-0 bg-black/80 z-50 overflow-y-auto backdrop-blur-sm flex items-center justify-center p-2 sm:p-4" 
+                    className="fixed inset-0 bg-black/80 z-50 overflow-y-auto backdrop-blur-sm flex items-start sm:items-center justify-center p-2 sm:p-4" 
                     onClick={() => setShowOpeningModal(false)}
                 >
                     <div 
-                        className="bg-[var(--card-bg)] rounded-xl max-w-2xl w-full h-full sm:h-auto max-h-[95vh] overflow-y-auto p-4 sm:p-6 md:p-8 shadow-2xl border border-[var(--primary-color)]/20 relative flex flex-col" 
+                        className="bg-[var(--card-bg)] rounded-xl max-w-2xl w-full mt-4 sm:mt-0 mb-4 sm:mb-0 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto p-4 sm:p-6 md:p-8 shadow-2xl border border-[var(--primary-color)]/20 relative flex flex-col" 
                         onClick={e => e.stopPropagation()}
                         style={{
                             backgroundColor: 'var(--card-bg)',
