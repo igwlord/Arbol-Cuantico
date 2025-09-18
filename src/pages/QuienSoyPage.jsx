@@ -60,8 +60,8 @@ export default function QuienSoyPage({ onNavigate }) {
 
       {/* Modal de Servicios */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-start sm:items-center justify-center z-50 p-2 sm:p-4 animate-fade-in overflow-y-auto">
-          <div className="bg-[var(--card-bg)] rounded-xl sm:rounded-2xl max-w-4xl w-full mt-4 sm:mt-0 mb-4 sm:mb-0 shadow-2xl border border-white/10 animate-scale-in flex flex-col max-h-[95vh] sm:max-h-[90vh]">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-start justify-center z-[60] p-3 animate-fade-in overflow-y-auto">
+          <div className="bg-[var(--card-bg)] rounded-2xl max-w-md sm:max-w-4xl w-full mt-6 mb-24 sm:mt-8 sm:mb-8 shadow-2xl border border-white/10 animate-scale-in flex flex-col max-h-[80vh] sm:max-h-[90vh]">
             {/* Header del Modal */}
             <div className="bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/90 p-4 sm:p-6 border-b border-white/10 flex-shrink-0">
               <div className="flex justify-between items-start">
@@ -87,13 +87,13 @@ export default function QuienSoyPage({ onNavigate }) {
                 
                 {/* Servicio 1 */}
                 <div className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 border border-white/10 hover:border-purple-400/30 transition-all duration-300">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center flex-shrink-0 self-start">
-                        <span className="text-xl sm:text-2xl">✨</span>
+                  <div className="p-3 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 mb-2 sm:mb-4">
+                      <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center flex-shrink-0 self-start">
+                        <span className="text-lg sm:text-2xl">✨</span>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg sm:text-xl font-semibold text-[var(--heading-color)] mb-2">
+                        <h3 className="text-base sm:text-xl font-semibold text-[var(--heading-color)] mb-2">
                           Armonización Cuántica
                         </h3>
                         <p className="text-sm sm:text-base text-[var(--text-color)]/70 leading-relaxed">
@@ -106,13 +106,13 @@ export default function QuienSoyPage({ onNavigate }) {
 
                 {/* Servicio 2 */}
                 <div className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 border border-white/10 hover:border-blue-400/30 transition-all duration-300">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0 self-start">
-                        <span className="text-xl sm:text-2xl">🌟</span>
+                  <div className="p-3 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 mb-2 sm:mb-4">
+                      <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0 self-start">
+                        <span className="text-lg sm:text-2xl">🌟</span>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg sm:text-xl font-semibold text-[var(--heading-color)] mb-2">
+                        <h3 className="text-base sm:text-xl font-semibold text-[var(--heading-color)] mb-2">
                           Armonización Tameana
                         </h3>
                         <p className="text-sm sm:text-base text-[var(--text-color)]/70 leading-relaxed">
@@ -125,13 +125,13 @@ export default function QuienSoyPage({ onNavigate }) {
 
                 {/* Servicio 3 */}
                 <div className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5 border border-white/10 hover:border-green-400/30 transition-all duration-300">
-                  <div className="p-4 sm:p-6">
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center flex-shrink-0 self-start">
-                        <span className="text-xl sm:text-2xl">🌳</span>
+                  <div className="p-3 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 mb-2 sm:mb-4">
+                      <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center flex-shrink-0 self-start">
+                        <span className="text-lg sm:text-2xl">🌳</span>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg sm:text-xl font-semibold text-[var(--heading-color)] mb-2">
+                        <h3 className="text-base sm:text-xl font-semibold text-[var(--heading-color)] mb-2">
                           Sesión Árbol de la Vida
                         </h3>
                         <p className="text-sm sm:text-base text-[var(--text-color)]/70 leading-relaxed">
@@ -142,22 +142,22 @@ export default function QuienSoyPage({ onNavigate }) {
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Call to Action */}
-              <div className="mt-6 sm:mt-8 text-center pt-4 sm:pt-6 border-t border-white/10">
-                <button 
-                  onClick={() => {
-                    setShowModal(false)
-                    if (onNavigate) {
-                      onNavigate('contacto')
-                    }
-                  }}
-                  className="group relative overflow-hidden bg-gradient-to-r from-[var(--primary-color)] to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-medium hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 w-full sm:w-auto"
-                >
-                  <span className="relative z-10">Agendar una sesión</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </button>
-              </div>
+            {/* Call to Action - Separado y fijo */}
+            <div className="bg-[var(--card-bg)] p-4 sm:p-6 border-t border-white/10 flex-shrink-0 rounded-b-2xl">
+              <button 
+                onClick={() => {
+                  setShowModal(false)
+                  if (onNavigate) {
+                    onNavigate('contacto')
+                  }
+                }}
+                className="group relative overflow-hidden bg-gradient-to-r from-[var(--primary-color)] to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-medium hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 w-full"
+              >
+                <span className="relative z-10">📅 Agendar una sesión</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-[var(--primary-color)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </button>
             </div>
           </div>
         </div>
