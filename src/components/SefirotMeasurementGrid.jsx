@@ -1,13 +1,13 @@
 import React from 'react'
+import { SEFIROT_DATA } from '../data/index.jsx'
 
 const SefirotMeasurementGrid = ({ 
-  sefirotData, 
   readings, 
   onReadingChange 
 }) => {
   return (
     <div className="space-y-8">
-      {sefirotData.map((sefira, index) => (
+      {SEFIROT_DATA.map((sefira, index) => (
         <div 
           key={sefira.id} 
           className="bg-gradient-to-r from-[var(--card-bg)]/50 to-[var(--card-bg)]/30 rounded-lg p-6 border border-white/10 backdrop-blur-sm"
