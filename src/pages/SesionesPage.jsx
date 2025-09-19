@@ -252,20 +252,13 @@ export default function SesionesPage() {
                                 className="form-input text-lg"
                             />
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
                                 <GlobalMeasurementGrid
-                                    label="Energía Global (Antes)"
-                                    description="Mide la energía inicial del consultante"
+                                    label="Energía Global Inicial"
+                                    description="Medición inicial de la energía global del consultante"
                                     value={currentSession.globalBefore}
                                     onChange={(value) => setCurrentSession(p => ({...p, globalBefore: value}))}
-                                    color="blue"
-                                />
-                                <GlobalMeasurementGrid
-                                    label="Energía Global (Después)"
-                                    description="Mide la energía final del consultante"
-                                    value={currentSession.globalAfter}
-                                    onChange={(value) => setCurrentSession(p => ({...p, globalAfter: value}))}
-                                    color="green"
+                                    color="gold"
                                 />
                             </div>
                         </div>
