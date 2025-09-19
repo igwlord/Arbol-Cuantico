@@ -1,6 +1,5 @@
 import React from 'react'
 import PageWrapper from '../components/PageWrapper'
-import Starfield from '../components/Starfield'
 
 export default function HomePage({ onNavigate }) {
   // Estado para controlar qué tarjetas están volteadas
@@ -70,8 +69,7 @@ export default function HomePage({ onNavigate }) {
         {/* Fondo degradado suave */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/10 via-purple-900/5 to-blue-900/10"></div>
         
-  {/* Sistema de estrellas sutiles (centralizado) */}
-  <Starfield starCount={window.innerWidth < 768 ? 500 : window.innerWidth < 1024 ? 900 : 1500} />
+  {/* Fondo dinámico eliminado */}
         
         {/* Contenido Hero */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
@@ -98,11 +96,7 @@ export default function HomePage({ onNavigate }) {
           </button>
         </div>
         
-        {/* Partículas flotantes decorativas */}
-        <div className="absolute top-20 left-10 w-4 h-4 bg-[var(--primary-color)] rounded-full opacity-70 animate-bounce" style={{animationDelay: '0s'}}></div>
-        <div className="absolute top-40 right-20 w-3 h-3 bg-yellow-400 rounded-full opacity-60 animate-bounce" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-40 left-20 w-5 h-5 bg-purple-400 rounded-full opacity-50 animate-bounce" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-10 w-2 h-2 bg-[var(--secondary-color)] rounded-full opacity-80 animate-bounce" style={{animationDelay: '0.5s'}}></div>
+  {/* Partículas decorativas eliminadas */}
       </div>
 
       {/* Introducción */}

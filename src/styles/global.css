@@ -398,6 +398,11 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
   }
 }
 
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
 /* Tarjetas Flip 3D */
 .flip-card {
   perspective: 1000px;

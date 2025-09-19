@@ -1,15 +1,20 @@
 import React from 'react'
 import PageWrapper from '../components/PageWrapper'
+import useBodyScrollLock from '../hooks/useBodyScrollLock'
 import Toast from '../components/Toast'
 import SefirotMeasurementGrid from '../components/SefirotMeasurementGrid'
 import GlobalMeasurementGrid from '../components/GlobalMeasurementGrid'
 import { useUserPrefs } from '../context/UserPrefsContext'
 import { SEFIROT_DATA } from '../data/index.jsx'
+import useFocusTrap from '../hooks/useFocusTrap'
 
 export default function SesionesPage() {
     const { prefs, sessions, setSessions } = useUserPrefs();
     const [toastMessage, setToastMessage] = React.useState('');
     const [showOpeningModal, setShowOpeningModal] = React.useState(false);
+    const openModalButtonRef = React.useRef(null);
+    const modalContainerRef = React.useRef(null);
+    const modalCloseButtonRef = React.useRef(null);
     
     // Estados para acordeones (en móvil)
     const [expandedSteps, setExpandedSteps] = React.useState({
@@ -72,19 +77,16 @@ export default function SesionesPage() {
         }, 100)
     }
 
-    // Bloquear scroll del body cuando el modal está abierto
-    React.useEffect(() => {
-        if (showOpeningModal) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = 'unset'
-        }
-        
-        // Cleanup al desmontar el componente
-        return () => {
-            document.body.style.overflow = 'unset'
-        }
-    }, [showOpeningModal])
+    // iOS-safe scroll lock when modal is open
+    useBodyScrollLock(showOpeningModal)
+    useFocusTrap({
+        containerRef: modalContainerRef,
+        isOpen: showOpeningModal,
+        initialFocusRef: modalCloseButtonRef,
+        closeOnEscape: true,
+        onClose: () => setShowOpeningModal(false),
+        returnFocusRef: openModalButtonRef,
+    })
     
     const initialReadings = SEFIROT_DATA.reduce((acc, sefira) => {
         acc[sefira.id] = { antes: 5, despues: 5 };
@@ -173,12 +175,12 @@ export default function SesionesPage() {
 
     return (
         <PageWrapper>
-            <header className="text-center mb-12">
+            <header className="text-center mb-12" aria-hidden={showOpeningModal ? 'true' : undefined}>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--heading-color)] mb-4">Registro de Sesión</h1>
                 <p className="text-lg text-[var(--text-color)]/80 max-w-3xl mx-auto">Sigue los pasos para registrar y guardar la sesión de un consultante.</p>
             </header>
 
-            <div className="bg-[var(--card-bg)] rounded-xl p-4 sm:p-6 md:p-8 space-y-4 md:space-y-8">
+            <div className="bg-[var(--card-bg)] rounded-xl p-4 sm:p-6 md:p-8 space-y-4 md:space-y-8" aria-hidden={showOpeningModal ? 'true' : undefined}>
                 {/* Step 1: Opening and Space Cleaning */}
                 <div className="border border-white/10 rounded-lg">
                     {/* Header clicable en móvil */}
@@ -207,6 +209,7 @@ export default function SesionesPage() {
                         <div ref={(el) => (stepRefs.current.step1 = el)} className="p-4 space-y-4">
                             <button 
                                 onClick={openModal}
+                                ref={openModalButtonRef}
                                 className="w-full bg-[var(--primary-color)] text-white px-6 py-4 rounded-lg hover:opacity-90 transition-opacity text-lg font-semibold"
                             >
                                 Ver instrucciones de apertura y limpieza
@@ -368,10 +371,13 @@ export default function SesionesPage() {
                 <div 
                     className="fixed inset-0 bg-black/90 z-50 overflow-y-auto backdrop-blur-sm flex items-start justify-center p-3" 
                     onClick={() => setShowOpeningModal(false)}
+                    role="dialog" aria-modal="true" aria-labelledby="opening-modal-title"
                 >
                     <div 
                         className="bg-[var(--card-bg)] rounded-2xl max-w-md sm:max-w-2xl w-full mt-6 mb-6 max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--primary-color)]/30 relative flex flex-col" 
                         onClick={e => e.stopPropagation()}
+                        ref={modalContainerRef}
+                        tabIndex={-1}
                         style={{
                             backgroundColor: 'var(--card-bg)',
                             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
@@ -381,13 +387,14 @@ export default function SesionesPage() {
                         <div className="bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 p-4 sm:p-6 rounded-t-2xl border-b border-[var(--primary-color)]/20 flex-shrink-0">
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
-                                    <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)] mb-1">✨ Apertura de Sesión</h3>
+                                    <h3 id="opening-modal-title" className="text-xl sm:text-2xl font-serif text-[var(--heading-color)] mb-1">✨ Apertura de Sesión</h3>
                                     <p className="text-sm text-[var(--text-color)]/70">Paso 1: Preparación del espacio sagrado</p>
                                 </div>
                                 <button 
                                     onClick={() => setShowOpeningModal(false)}
                                     className="ml-3 w-8 h-8 rounded-full bg-[var(--primary-color)]/10 hover:bg-[var(--primary-color)]/20 text-[var(--text-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center flex-shrink-0"
                                     aria-label="Cerrar modal"
+                                    ref={modalCloseButtonRef}
                                 >
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -444,8 +451,8 @@ export default function SesionesPage() {
                             </div>
                         </div>
                         
-                        {/* Footer del modal */}
-                        <div className="p-4 sm:p-6 bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/95 border-t border-[var(--primary-color)]/10 rounded-b-2xl flex-shrink-0">
+                        {/* Footer del modal (con safe-area) */}
+                        <div className="p-4 sm:p-6 bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/95 border-t border-[var(--primary-color)]/10 rounded-b-2xl flex-shrink-0" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
                             <button 
                                 onClick={() => setShowOpeningModal(false)}
                                 className="w-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color)]/80 text-white px-6 py-3 rounded-full hover:opacity-90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl text-sm sm:text-base"
@@ -458,7 +465,7 @@ export default function SesionesPage() {
             )}
 
             {/* Session History */}
-            <div className="mt-16">
+            <div className="mt-16" aria-hidden={showOpeningModal ? 'true' : undefined}>
                 <h2 className="text-2xl sm:text-3xl font-serif text-[var(--heading-color)] mb-6 text-center">Historial de Sesiones</h2>
                 {sessions.length > 0 ? (
                     <div className="space-y-4">
