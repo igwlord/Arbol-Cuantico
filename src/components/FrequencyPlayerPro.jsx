@@ -3,8 +3,9 @@ import { useAudio } from '../context/AudioContext'
 import { logger } from '../utils/logger'
 
 const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
-  const { currentlyPlaying, isPlaying, startPlaying, stopPlaying, togglePlaying, isSefirotPlaying } = useAudio()
+  const { currentlyPlaying, isPlaying, startPlaying, stopPlaying, togglePlaying, isSefirotPlaying, getVolumeForSefirot, setVolumeForSefirot } = useAudio()
   const [isLoading, setIsLoading] = React.useState(false)
+  const currentVolume = getVolumeForSefirot(sefirotId)
   
   // Estado del botón para este sefirot específico
   const isThisSefirotPlaying = isSefirotPlaying(sefirotId)
@@ -23,7 +24,8 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
       // Configurar audio
       audio.preload = 'auto'
       audio.loop = true
-      audio.volume = 0.7
+  // volumen se asigna desde el contexto según Sefirá
+  audio.volume = getVolumeForSefirot(sefirotId)
       
       // Flag para evitar múltiples errores
       let hasErrored = false
@@ -135,6 +137,27 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
           {buttonText}
         </span>
       </button>
+
+      {/* Control de volumen por Sefirá */}
+  <div className="mt-3 flex items-center gap-3 min-h-[32px]">
+        <label htmlFor={`vol-${sefirotId}`} className="text-xs text-[var(--text-color)]/70 whitespace-nowrap">Volumen</label>
+        <input
+          id={`vol-${sefirotId}`}
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          value={currentVolume}
+          onChange={(e) => {
+            // Evita saltos de scroll en móviles al mover el slider
+            try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur() } catch {}
+            setVolumeForSefirot(sefirotId, parseFloat(e.target.value))
+          }}
+          className="flex-1 accent-[var(--secondary-color)]"
+          aria-label={`Volumen para ${label}`}
+        />
+        <span className="text-xs w-10 text-right text-[var(--text-color)]/60">{Math.round(currentVolume * 100)}%</span>
+      </div>
       
       {/* Indicador global de reproducción */}
       {currentlyPlaying && (

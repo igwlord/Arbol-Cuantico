@@ -8,7 +8,7 @@ import { useAudio } from '../context/AudioContext'
 export default function ComandosPage() {
   const [selectedSefira, setSelectedSefira] = React.useState(null);
   const [selectedDescription, setSelectedDescription] = React.useState(null);
-  const { currentlyPlaying, isPlaying } = useAudio();
+  const { currentlyPlaying, isPlaying, getVolumeForSefirot, setVolumeForSefirot } = useAudio();
 
   // Función para manejar clic en Sefirot
   const handleSefirotClick = (sefira, description) => {
@@ -37,6 +37,23 @@ export default function ComandosPage() {
             activeSefirotId={currentlyPlaying?.sefirotId}
             isPlaying={isPlaying}
           />
+          {/* Chip flotante de volumen para la Sefirá activa */}
+          {currentlyPlaying && (
+            <div className="mt-3 hidden lg:flex items-center gap-3 bg-[var(--card-bg)]/80 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2 w-full sm:w-auto sticky top-2 z-10">
+              <span className="text-xs text-[var(--text-color)]/70 whitespace-nowrap">Volumen {currentlyPlaying.label}</span>
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={getVolumeForSefirot(currentlyPlaying.sefirotId)}
+                onChange={(e) => setVolumeForSefirot(currentlyPlaying.sefirotId, parseFloat(e.target.value))}
+                className="flex-1 accent-[var(--secondary-color)]"
+                aria-label={`Volumen para ${currentlyPlaying.label}`}
+              />
+              <span className="text-xs w-10 text-right text-[var(--text-color)]/60">{Math.round(getVolumeForSefirot(currentlyPlaying.sefirotId) * 100)}%</span>
+            </div>
+          )}
           
           {/* Indicador de Sefirot activo */}
           {currentlyPlaying && (

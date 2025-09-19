@@ -14,6 +14,39 @@ export const useAudio = () => {
 export const AudioProvider = ({ children }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = React.useState(null) // { sefirotId, hz, label, audio }
   const [isPlaying, setIsPlaying] = React.useState(false)
+  // Volumen por Sefirá (0..1)
+  const [volumeBySefirot, setVolumeBySefirot] = React.useState({})
+
+  // Hidratar volúmenes desde localStorage
+  React.useEffect(() => {
+    try {
+      const stored = localStorage.getItem('arbolCuanticoVolumes')
+      if (stored) setVolumeBySefirot(JSON.parse(stored))
+    } catch {}
+  }, [])
+
+  // Persistir cambios de volumen
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('arbolCuanticoVolumes', JSON.stringify(volumeBySefirot))
+    } catch {}
+  }, [volumeBySefirot])
+
+  const getVolumeForSefirot = React.useCallback((sefirotId) => {
+    if (!sefirotId) return 0.7
+    const v = volumeBySefirot[sefirotId]
+    return typeof v === 'number' ? v : 0.7
+  }, [volumeBySefirot])
+
+  const setVolumeForSefirot = React.useCallback((sefirotId, volume) => {
+    setVolumeBySefirot(prev => ({ ...prev, [sefirotId]: Math.max(0, Math.min(1, volume)) }))
+    // Si es el que está sonando, aplicar inmediatamente
+    if (currentlyPlaying?.audio && currentlyPlaying?.sefirotId === sefirotId) {
+      try {
+        currentlyPlaying.audio.volume = Math.max(0, Math.min(1, volume))
+      } catch {}
+    }
+  }, [currentlyPlaying])
   
   // Función para iniciar reproducción
   const startPlaying = React.useCallback((sefirotId, hz, label, audioElement) => {
@@ -24,6 +57,11 @@ export const AudioProvider = ({ children }) => {
       currentlyPlaying.audio.src = ''
     }
     
+    // Aplicar volumen guardado
+    try {
+      audioElement.volume = getVolumeForSefirot(sefirotId)
+    } catch {}
+
     setCurrentlyPlaying({ sefirotId, hz, label, audio: audioElement })
     setIsPlaying(true)
     
@@ -83,6 +121,8 @@ export const AudioProvider = ({ children }) => {
     startPlaying,
     stopPlaying,
     togglePlaying,
+    getVolumeForSefirot,
+    setVolumeForSefirot,
     // Helper para saber si un sefirot específico está reproduciéndose
     isSefirotPlaying: (sefirotId) => currentlyPlaying?.sefirotId === sefirotId && isPlaying
   }
