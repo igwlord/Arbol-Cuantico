@@ -8,6 +8,7 @@ import SesionesPage from './pages/SesionesPage'
 import QuienSoyPage from './pages/QuienSoyPage'
 import ContactoPage from './pages/ContactoPage'
 import ConfiguracionPage from './pages/ConfiguracionPage'
+import DiccionarioPage from './pages/DiccionarioPage'
 import { UserPrefsProvider, useUserPrefs } from './context/UserPrefsContext'
 import { AudioProvider } from './context/AudioContext'
 import { navItems as NAV_ITEMS_DATA } from './data/index.jsx'
@@ -86,6 +87,8 @@ function AppContent() {
         return <ComandosPage />
       case 'sesiones':
         return <SesionesPage />
+      case 'diccionario':
+        return <DiccionarioPage />
       case 'quien-soy':
         return <QuienSoyPage onNavigate={handlePageNavigation} />
       case 'contacto':
