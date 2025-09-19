@@ -1,5 +1,6 @@
 import React from 'react'
 import { useAudio } from '../context/AudioContext'
+import { logger } from '../utils/logger'
 
 const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
   const { currentlyPlaying, isPlaying, startPlaying, stopPlaying, togglePlaying, isSefirotPlaying } = useAudio()
@@ -42,7 +43,7 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
           })
           
         } catch (error) {
-          console.error('Error playing audio:', error)
+          logger.error('Error playing audio:', error)
           setIsLoading(false)
           if (!hasErrored) {
             hasErrored = true
@@ -54,7 +55,7 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
         if (hasErrored) return
         hasErrored = true
         
-        console.error('Audio loading error:', e)
+  logger.error('Audio loading error:', e)
         setIsLoading(false)
       })
       
@@ -75,7 +76,7 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
       audio.load()
       
     } catch (error) {
-      console.error('Error in handlePlay:', error)
+      logger.error('Error in handlePlay:', error)
       setIsLoading(false)
     }
   }, [hz, label, sefirotId, startPlaying, stopPlaying])

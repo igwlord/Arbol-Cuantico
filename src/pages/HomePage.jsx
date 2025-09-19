@@ -1,66 +1,6 @@
 import React from 'react'
 import PageWrapper from '../components/PageWrapper'
-
-// Componente de estrellas sutiles
-const StarField = () => {
-  const [windowSize, setWindowSize] = React.useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
-    height: typeof window !== 'undefined' ? window.innerHeight : 768
-  });
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const stars = React.useMemo(() => {
-    const starArray = [];
-    // Adaptativo según el dispositivo para optimizar rendimiento
-    const starCount = windowSize.width < 768 ? 12 : windowSize.width < 1024 ? 20 : 30;
-    
-    for (let i = 0; i < starCount; i++) {
-      starArray.push({
-        id: i,
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        animationDelay: Math.random() * 6,
-        animationDuration: 3 + Math.random() * 4,
-        size: Math.random() * 1.5 + 0.8
-      });
-    }
-    return starArray;
-  }, [windowSize]);
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {stars.map(star => (
-        <div
-          key={star.id}
-          className="absolute bg-white/20 rounded-full animate-pulse"
-          style={{
-            left: `${star.left}%`,
-            top: `${star.top}%`,
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            animationDelay: `${star.animationDelay}s`,
-            animationDuration: `${star.animationDuration}s`,
-            animationTimingFunction: 'ease-in-out',
-            animationIterationCount: 'infinite',
-            boxShadow: '0 0 4px rgba(255, 255, 255, 0.3)',
-            filter: 'blur(0.3px)'
-          }}
-        />
-      ))}
-    </div>
-  );
-};
+import Starfield from '../components/Starfield'
 
 export default function HomePage({ onNavigate }) {
   // Estado para controlar qué tarjetas están volteadas
@@ -130,8 +70,8 @@ export default function HomePage({ onNavigate }) {
         {/* Fondo degradado suave */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/10 via-purple-900/5 to-blue-900/10"></div>
         
-        {/* Sistema de estrellas sutiles */}
-        <StarField />
+  {/* Sistema de estrellas sutiles (centralizado) */}
+  <Starfield starCount={window.innerWidth < 768 ? 500 : window.innerWidth < 1024 ? 900 : 1500} />
         
         {/* Contenido Hero */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
