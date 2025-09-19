@@ -20,7 +20,7 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
               {/* Botón de página actual */}
               {currentItem && (
                 <button
-                  className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-[var(--primary-color)] to-purple-600 text-white shadow-lg shadow-[var(--primary-color)]/50 relative overflow-hidden"
+                  className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-[var(--primary-color)] to-purple-600 text-white shadow-lg shadow-[var(--primary-color)]/50 relative overflow-hidden ring-2 ring-white/70 ring-offset-1 ring-offset-transparent"
                   title={currentItem.title}
                   aria-label={currentItem.title}
                   aria-current="page"
@@ -56,7 +56,7 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                     }}
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ease-out relative overflow-hidden ${
                       isActive
-                        ? 'bg-gradient-to-br from-[var(--primary-color)] to-purple-600 text-white shadow-lg shadow-[var(--primary-color)]/50'
+                        ? 'bg-gradient-to-br from-[var(--primary-color)] to-purple-600 text-white shadow-lg shadow-[var(--primary-color)]/50 ring-2 ring-white/70 ring-offset-1 ring-offset-transparent'
                         : 'text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20'
                     }`}
                     title={item.title}
@@ -109,7 +109,7 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                 onClick={() => onNavigate(item.id)}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ease-out relative overflow-hidden group ${
                   isActive
-                    ? 'bg-gradient-to-br from-[var(--primary-color)] to-purple-600 text-white scale-110 shadow-lg shadow-[var(--primary-color)]/50'
+                    ? 'bg-gradient-to-br from-[var(--primary-color)] to-purple-600 text-white scale-110 shadow-lg shadow-[var(--primary-color)]/50 ring-2 ring-white/70 ring-offset-1 ring-offset-transparent'
                     : 'text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20 hover:scale-105 hover:shadow-lg hover:shadow-[var(--primary-color)]/30'
                 }`}
                 title={item.title}

@@ -13,16 +13,54 @@ export const SEFIROT_DATA = [
 ].sort((a, b) => a.orden - b.orden);
 
 export const navItems = [
-  { href: '/', label: 'Home', ariaLabel: 'Ir a Inicio', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>) },
-  { href: '/comandos', label: 'Comandos', ariaLabel: 'Explorar el Árbol Interactivo', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>) },
-  { href: '/sesiones', label: 'Sesiones', ariaLabel: 'Ver Historial de Sesiones', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>) },
-  { href: '/diccionario', label: 'Diccionario', ariaLabel: 'Glosario y galería', icon: (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <path d="M4 5a3 3 0 0 1 3-3h12v18H7a3 3 0 0 0-3 3V5Z"></path>
-      <path d="M7 4h12"></path>
+  { href: '/', label: 'Home', ariaLabel: 'Ir a Inicio', icon: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 3.2 3 10v9c0 .6.4 1 1 1h5c.6 0 1-.4 1-1v-4h4v4c0 .6.4 1 1 1h5c.6 0 1-.4 1-1v-9l-9-6.8Z"/>
     </svg>
   ) },
-  { href: '/quien-soy', label: 'Quién soy', ariaLabel: 'Sobre mí', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>) },
-  { href: '/contacto', label: 'Contacto', ariaLabel: 'Formulario de Contacto', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><polyline points="4 6 12 13 20 6"></polyline></svg>) },
-  { href: '/configuracion', label: 'Configuración', ariaLabel: 'Ajustes del Portal', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>) },
+  { href: '/comandos', label: 'Comandos', ariaLabel: 'Explorar el Árbol Interactivo', icon: (
+    /* Flor de la Vida (7 círculos) simplificada para 22px */
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="12" cy="12" r="2.2"/>
+      <circle cx="12" cy="6.8" r="2.2"/>
+      <circle cx="12" cy="17.2" r="2.2"/>
+      <circle cx="7.8" cy="9.4" r="2.2"/>
+      <circle cx="16.2" cy="9.4" r="2.2"/>
+      <circle cx="7.8" cy="14.6" r="2.2"/>
+      <circle cx="16.2" cy="14.6" r="2.2"/>
+    </svg>
+  ) },
+  { href: '/sesiones', label: 'Sesiones', ariaLabel: 'Ver Historial de Sesiones', icon: (
+    /* Varita con destellos */
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="m3.8 18.2 7.9-7.9 2.1 2.1-7.9 7.9c-.6.6-1.5.6-2.1 0s-.6-1.5 0-2.1Z"/>
+      <path d="M14.5 6.5 16 5l1.5 1.5L19 5l1.5 1.5L19 8l1.5 1.5L19 11l-1.5-1.5L16 11l-1.5-1.5L16 8l-1.5-1.5Z"/>
+    </svg>
+  ) },
+  { href: '/diccionario', label: 'Diccionario', ariaLabel: 'Glosario y galería', icon: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M5 3h12c.6 0 1 .4 1 1v14H6.8C5.8 18 5 18.8 5 19.8V21H4c-.6 0-1-.4-1-1V6c0-1.7 1.3-3 3-3Z"/>
+      <path d="M18 4H7.5C6.1 4 5 5.1 5 6.5S6.1 9 7.5 9H18V4Z"/>
+    </svg>
+  ) },
+  { href: '/quien-soy', label: 'Quién soy', ariaLabel: 'Sobre mí', icon: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 12.8a4.8 4.8 0 1 0 0-9.6 4.8 4.8 0 0 0 0 9.6Z"/>
+      <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8H4Z"/>
+    </svg>
+  ) },
+  { href: '/contacto', label: 'Contacto', ariaLabel: 'Formulario de Contacto', icon: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M4.5 4h15c.8 0 1.5.7 1.5 1.5v9c0 .8-.7 1.5-1.5 1.5H10l-4.7 3.5c-.5.4-1.3 0-1.3-.6V6.5C4 4.7 4.7 4 5.5 4h-1Z"/>
+      <circle cx="8" cy="10" r="1.2"/>
+      <circle cx="12" cy="10" r="1.2"/>
+      <circle cx="16" cy="10" r="1.2"/>
+    </svg>
+  ) },
+  { href: '/configuracion', label: 'Configuración', ariaLabel: 'Ajustes del Portal', icon: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/>
+      <path d="M20.3 13.6c.1-.5.2-1.1.2-1.6s-.1-1.1-.2-1.6l2-1.6c.2-.2.3-.5.1-.8l-1.9-3.3c-.1-.3-.5-.4-.8-.3l-2.3.9c-.8-.6-1.6-1-2.6-1.3L14.6 1c-.1-.3-.4-.5-.7-.5h-3.8c-.3 0-.6.2-.7.5L8.7 3c-1 .3-1.8.7-2.6 1.3l-2.3-.9c-.3-.1-.7 0-.8.3L1 7c-.2.3-.1.6.1.8l2 1.6c-.1.5-.2 1.1-.2 1.6s.1 1.1.2 1.6l-2 1.6c-.2.2-.3.5-.1.8l1.9 3.3c.1.3.5.4.8.3l2.3-.9c.8.6 1.6 1 2.6 1.3l.7 2c.1.3.4.5.7.5h3.8c.3 0 .6-.2.7-.5l.7-2c1-.3 1.8-.7 2.6-1.3l2.3.9c.3.1.7 0 .8-.3l1.9-3.3c.2-.3.1-.6-.1-.8l-2-1.6Z"/>
+    </svg>
+  ) },
 ];
