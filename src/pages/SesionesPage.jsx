@@ -374,7 +374,7 @@ export default function SesionesPage() {
                     role="dialog" aria-modal="true" aria-labelledby="opening-modal-title"
                 >
                     <div 
-                        className="bg-[var(--card-bg)] rounded-2xl max-w-md sm:max-w-2xl w-full mt-6 mb-6 max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--primary-color)]/30 relative flex flex-col" 
+                        className="bg-[var(--card-bg)] rounded-2xl max-w-md sm:max-w-2xl w-full mt-6 mb-6 max-h-[90vh] overflow-y-auto nice-scroll shadow-2xl border border-white/10 relative flex flex-col" 
                         onClick={e => e.stopPropagation()}
                         ref={modalContainerRef}
                         tabIndex={-1}
@@ -384,15 +384,18 @@ export default function SesionesPage() {
                         }}
                     >
                         {/* Header mejorado para móviles */}
-                        <div className="bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 p-4 sm:p-6 rounded-t-2xl border-b border-[var(--primary-color)]/20 flex-shrink-0">
+                        <div className="bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 p-4 sm:p-6 rounded-t-2xl border-b border-white/10 flex-shrink-0">
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
-                                    <h3 id="opening-modal-title" className="text-xl sm:text-2xl font-serif text-[var(--heading-color)] mb-1">✨ Apertura de Sesión</h3>
-                                    <p className="text-sm text-[var(--text-color)]/70">Paso 1: Preparación del espacio sagrado</p>
+                                    <div className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-white/5 border border-white/10 mb-2">
+                                        <span className="text-xs">Paso 1</span>
+                                        <span className="text-xs text-[var(--text-color)]/70">Preparación del espacio</span>
+                                    </div>
+                                    <h3 id="opening-modal-title" className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">✨ Apertura de Sesión</h3>
                                 </div>
                                 <button 
                                     onClick={() => setShowOpeningModal(false)}
-                                    className="ml-3 w-8 h-8 rounded-full bg-[var(--primary-color)]/10 hover:bg-[var(--primary-color)]/20 text-[var(--text-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center flex-shrink-0"
+                                    className="ml-3 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[var(--text-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center flex-shrink-0"
                                     aria-label="Cerrar modal"
                                     ref={modalCloseButtonRef}
                                 >
@@ -405,54 +408,66 @@ export default function SesionesPage() {
                         </div>
                         
                         {/* Contenido optimizado para móviles */}
-                        <div className="p-4 sm:p-6 space-y-5 flex-1">
-                            
-                            {/* Paso 1: Limpieza */}
-                            <div className="bg-gradient-to-r from-green-500/10 via-green-500/5 to-transparent p-4 rounded-xl border-l-4 border-green-500">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <span className="text-lg">🌿</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-green-400 mb-2 text-base">Limpia el espacio</h4>
-                                        <p className="text-[var(--text-color)]/80 text-sm leading-relaxed">
-                                            Usa spray áurico, sahumo o incienso. Respira profundo para conectar con el momento presente.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {/* Paso 2: Comando */}
-                            <div className="bg-gradient-to-r from-[var(--primary-color)]/10 via-[var(--primary-color)]/5 to-transparent p-4 rounded-xl border-l-4 border-[var(--primary-color)]">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-[var(--primary-color)]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <span className="text-lg">✨</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-[var(--primary-color)] mb-3 text-base">Comando de Apertura</h4>
-                                        <div className="bg-[var(--card-bg)] p-4 rounded-lg border border-[var(--primary-color)]/20 shadow-inner">
-                                            <p className="text-[var(--text-color)] text-sm leading-relaxed text-center italic font-medium">
-                                                "{openingCommand}"
+                        <div className="p-4 sm:p-6 space-y-5 flex-1 relative">
+                            {/* Fade superior e inferior para indicar scroll */}
+                            <div className="pointer-events-none absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[var(--card-bg)] to-transparent rounded-t-2xl" />
+                            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--card-bg)] to-transparent rounded-b-2xl" />
+                            <div className="max-w-md mx-auto space-y-5">
+                                {/* Paso 1: Limpieza */}
+                                <div className="p-4 rounded-xl border border-white/10 bg-white/5 shadow-inner">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-green-500/15 ring-1 ring-green-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <span className="text-lg">🌿</span>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="font-semibold text-green-300 mb-2 text-base">Limpia el espacio</h4>
+                                            <p className="text-[var(--text-color)]/80 text-sm leading-relaxed">
+                                                Usa spray áurico, sahumo o incienso. Respira profundo para conectar con el momento presente.
                                             </p>
                                         </div>
-                                        <div className="mt-3 text-xs text-[var(--text-color)]/60 text-center">
-                                            💡 Recita este comando en voz alta con intención clara
-                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Recordatorio adicional */}
-                            <div className="bg-gradient-to-r from-purple-500/10 via-purple-500/5 to-transparent p-3 rounded-lg border border-purple-500/20">
-                                <div className="flex items-center gap-2 text-purple-400 text-sm">
-                                    <span>🔮</span>
-                                    <span className="font-medium">Mantén la intención pura y el corazón abierto durante todo el proceso</span>
+                                {/* Paso 2: Comando */}
+                                <div className="p-4 rounded-xl border border-white/10 bg-white/5 shadow-inner">
+                                    {/* Header: icono + título a la izquierda, copiar a la derecha */}
+                                    <div className="flex items-center justify-between gap-3 mb-2">
+                                        <div className="inline-flex items-center gap-2">
+                                            <div className="w-10 h-10 rounded-full bg-[var(--primary-color)]/15 ring-1 ring-[var(--primary-color)]/30 flex items-center justify-center flex-shrink-0">
+                                                <span className="text-lg">✨</span>
+                                            </div>
+                                            <h4 className="font-semibold text-[var(--primary-color)] text-base">Comando de Apertura</h4>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => { navigator.clipboard?.writeText(`\"${openingCommand}\"`); showToast('Comando copiado'); }}
+                                            className="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/10"
+                                            aria-label="Copiar comando"
+                                        >Copiar</button>
+                                    </div>
+                                    {/* Quote a ancho completo */}
+                                    <div className="bg-[var(--card-bg)]/80 p-4 rounded-lg border border-white/10 shadow-inner">
+                                        <p className="text-[var(--text-color)] text-[0.95rem] leading-6 sm:leading-relaxed italic">
+                                            "{openingCommand}"
+                                        </p>
+                                    </div>
+                                    <div className="mt-3 text-xs text-[var(--text-color)]/60">
+                                        💡 Recita este comando en voz alta con intención clara
+                                    </div>
+                                </div>
+
+                                {/* Recordatorio adicional */}
+                                <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                                    <div className="flex items-center gap-2 text-[var(--text-color)]/80 text-sm">
+                                        <span>🔮</span>
+                                        <span className="font-medium">Mantén la intención pura y el corazón abierto durante todo el proceso</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         {/* Footer del modal (con safe-area) */}
-                        <div className="p-4 sm:p-6 bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/95 border-t border-[var(--primary-color)]/10 rounded-b-2xl flex-shrink-0" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
+                        <div className="p-4 sm:p-6 bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/95 border-t border-white/10 rounded-b-2xl flex-shrink-0" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
                             <button 
                                 onClick={() => setShowOpeningModal(false)}
                                 className="w-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color)]/80 text-white px-6 py-3 rounded-full hover:opacity-90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl text-sm sm:text-base"

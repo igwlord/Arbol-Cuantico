@@ -264,23 +264,6 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
 .connection-central-4 { animation: cosmicIgnition 0.6s 0.4s ease-out forwards; }
 .connection-1 { animation: cosmicIgnition 0.4s 0.5s ease-out forwards; }
 .connection-2 { animation: cosmicIgnition 0.4s 0.6s ease-out forwards; }
-.connection-3 { animation: cosmicIgnition 0.4s 0.7s ease-out forwards; }
-.connection-4 { animation: cosmicIgnition 0.4s 0.8s ease-out forwards; }
-.connection-5 { animation: cosmicIgnition 0.4s 0.9s ease-out forwards; }
-.connection-6 { animation: cosmicIgnition 0.4s 1s ease-out forwards; }
-.connection-7 { animation: cosmicIgnition 0.4s 1.1s ease-out forwards; }
-.connection-8 { animation: cosmicIgnition 0.4s 1.2s ease-out forwards; }
-.connection-diagonal-1 { animation: cosmicIgnition 0.3s 1.3s ease-out forwards; }
-.connection-diagonal-2 { animation: cosmicIgnition 0.3s 1.4s ease-out forwards; }
-.connection-diagonal-3 { animation: cosmicIgnition 0.3s 1.5s ease-out forwards; }
-.connection-diagonal-4 { animation: cosmicIgnition 0.3s 1.6s ease-out forwards; }
-.connection-diagonal-5 { animation: cosmicIgnition 0.3s 1.7s ease-out forwards; }
-.connection-diagonal-6 { animation: cosmicIgnition 0.3s 1.8s ease-out forwards; }
-
-@keyframes connectionsIgnite {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
 
 @keyframes cosmicIgnition {
   0% { 
@@ -402,6 +385,12 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: v
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Scrollbar sutil para contenedores con overflow */
+.nice-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.25) transparent; }
+.nice-scroll::-webkit-scrollbar { width: 8px; }
+.nice-scroll::-webkit-scrollbar-track { background: transparent; }
+.nice-scroll::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.25); border-radius: 9999px; border: 2px solid transparent; background-clip: padding-box; }
 
 /* Tarjetas Flip 3D */
 .flip-card {
