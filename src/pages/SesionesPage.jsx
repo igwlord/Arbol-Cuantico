@@ -18,6 +18,43 @@ export default function SesionesPage() {
         step3: false,
         step4: false
     });
+
+    // Detectar desktop para desactivar el colapso en pantallas grandes
+    const [isDesktop, setIsDesktop] = React.useState(() =>
+        typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)').matches : false
+    );
+    React.useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const mq = window.matchMedia('(min-width: 768px)');
+        const onChange = (e) => setIsDesktop(e.matches);
+        mq.addEventListener ? mq.addEventListener('change', onChange) : mq.addListener(onChange);
+        setIsDesktop(mq.matches);
+        return () => {
+            mq.removeEventListener ? mq.removeEventListener('change', onChange) : mq.removeListener(onChange);
+        };
+    }, []);
+
+    // Refs y alturas medidas para cada sección (mejor fiabilidad en móviles)
+    const stepRefs = React.useRef({ step1: null, step2: null, step3: null, step4: null });
+    const [measuredHeights, setMeasuredHeights] = React.useState({ step1: 0, step2: 0, step3: 0, step4: 0 });
+    const measureHeights = React.useCallback(() => {
+        setMeasuredHeights((prev) => ({
+            step1: stepRefs.current.step1?.scrollHeight || 0,
+            step2: stepRefs.current.step2?.scrollHeight || 0,
+            step3: stepRefs.current.step3?.scrollHeight || 0,
+            step4: stepRefs.current.step4?.scrollHeight || 0,
+        }));
+    }, []);
+    React.useEffect(() => {
+        // Medir al montar y cuando cambia el estado de expansión
+        measureHeights();
+    }, [expandedSteps.step1, expandedSteps.step2, expandedSteps.step3, expandedSteps.step4, measureHeights]);
+    React.useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const onResize = () => measureHeights();
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [measureHeights]);
     
     const toggleStep = (step) => {
         setExpandedSteps(prev => ({
@@ -160,9 +197,14 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 1: Apertura de la sesión y limpieza del espacio</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step1 ? 'max-h-96' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-4">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step1 ? `${measuredHeights.step1}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step1 = el)} className="p-4 space-y-4">
                             <button 
                                 onClick={openModal}
                                 className="w-full bg-[var(--primary-color)] text-white px-6 py-4 rounded-lg hover:opacity-90 transition-opacity text-lg font-semibold"
@@ -191,9 +233,14 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 2: Datos y Medición Global</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step2 ? 'max-h-screen' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-4">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step2 ? `${measuredHeights.step2}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step2 = el)} className="p-4 space-y-4">
                             <input
                                 type="text"
                                 placeholder="Nombre del Consultante"
@@ -240,9 +287,14 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 3: Medición por Sefirá</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step3 ? 'max-h-screen' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-4">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step3 ? `${measuredHeights.step3}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step3 = el)} className="p-4 space-y-4">
                             <p className="text-[var(--text-color)]/80 italic">
                                 Usar el péndulo para medir en el biometro cada sefira y registrar su estado antes y después de la armonización.
                             </p>
@@ -273,9 +325,14 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 4: Medición global y comando de cierre</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step4 ? 'max-h-screen' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-6">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step4 ? `${measuredHeights.step4}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step4 = el)} className="p-4 space-y-6">
                             <div className="space-y-4">
                                 <p className="text-[var(--text-color)] mb-4">
                                     <strong>1.</strong> Mide de nuevo la energía global situándote en el sefira Da'at
