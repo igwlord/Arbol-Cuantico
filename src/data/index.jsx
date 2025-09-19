@@ -38,9 +38,11 @@ export const navItems = [
     </svg>
   ) },
   { href: '/diccionario', label: 'Diccionario', ariaLabel: 'Glosario y galería', icon: (
+    /* Libro abierto con marcador (bookmark) para mayor reconocimiento */
     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M5 3h12c.6 0 1 .4 1 1v14H6.8C5.8 18 5 18.8 5 19.8V21H4c-.6 0-1-.4-1-1V6c0-1.7 1.3-3 3-3Z"/>
-      <path d="M18 4H7.5C6.1 4 5 5.1 5 6.5S6.1 9 7.5 9H18V4Z"/>
+      <path d="M3 7a2 2 0 0 1 2-2h6v12H5a2 2 0 0 1-2-2V7z"/>
+      <path d="M21 7a2 2 0 0 0-2-2h-6v12h6a2 2 0 0 0 2-2V7z"/>
+      <path d="M15 5.2c0-.2.2-.2.3-.2h2.4c.2 0 .3.1.3.3V11l-1.5-.9L15 11V5.2z"/>
     </svg>
   ) },
   { href: '/quien-soy', label: 'Quién soy', ariaLabel: 'Sobre mí', icon: (
