@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#a855f7"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <!-- Circular backdrop -->
+  <circle cx="32" cy="32" r="30" fill="#140a26"/>
+  <!-- Stylized tree of life: trunk + branching canopy -->
+  <g stroke="url(#g)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- trunk -->
+    <path d="M32 48 L32 30"/>
+    <!-- roots -->
+    <path d="M32 48 C28 50, 26 52, 24 56"/>
+    <path d="M32 48 C36 50, 38 52, 40 56"/>
+    <!-- main branches -->
+    <path d="M32 34 C28 32, 24 28, 22 24"/>
+    <path d="M32 34 C36 32, 40 28, 42 24"/>
+    <!-- canopy connections (sephirot-like nodes) -->
+    <circle cx="32" cy="30" r="2" fill="#ffd700"/>
+    <circle cx="22" cy="24" r="2" fill="#ffd700"/>
+    <circle cx="42" cy="24" r="2" fill="#ffd700"/>
+    <circle cx="18" cy="18" r="2" fill="#ffd700"/>
+    <circle cx="46" cy="18" r="2" fill="#ffd700"/>
+    <circle cx="32" cy="18" r="2" fill="#ffd700"/>
+  </g>
+</svg>
