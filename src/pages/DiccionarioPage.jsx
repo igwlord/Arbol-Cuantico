@@ -12,7 +12,6 @@ export default function DiccionarioPage() {
   const [showModal, setShowModal] = React.useState(false)
   const totalImages = DICCIONARIO_IMAGES.length
   const [imagesLoaded, setImagesLoaded] = React.useState(0)
-  const allImagesLoaded = imagesLoaded >= totalImages && totalImages > 0
 
   const termResults = React.useMemo(() => {
     return searchTerms(DICCIONARIO_TERMS, query)
@@ -124,18 +123,14 @@ export default function DiccionarioPage() {
           </section>
         ) : activeTab === 'imagenes' ? (
           <section className="mt-2 relative">
-            {/* Overlay de carga a nivel viewport vía portal */}
-            {!allImagesLoaded && createPortal(
-              <div className="fixed inset-0 z-[100] grid place-items-center bg-[var(--bg-color)]/70 backdrop-blur-sm">
-                <div className="flex flex-col items-center gap-3 text-[var(--text-color)]/85">
-                  <div className="w-10 h-10 rounded-full border-2 border-white/20 border-t-[var(--primary-color)] animate-spin"></div>
-                  <p className="text-sm">Cargando imágenes… {imagesLoaded}/{totalImages}</p>
-                </div>
-              </div>,
-              document.body
+            {/* Indicador no bloqueante (accesible) */}
+            {imagesLoaded < totalImages && (
+              <p className="text-center text-sm text-[var(--text-color)]/70 mb-3" aria-live="polite">
+                Cargando imágenes… {imagesLoaded}/{totalImages}
+              </p>
             )}
 
-            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity duration-500 ${allImagesLoaded ? 'opacity-100' : 'opacity-50'}`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {DICCIONARIO_IMAGES.map((img, idx) => (
                 <FlipCard
                   key={img.id}
@@ -311,8 +306,26 @@ function FlipCard({ title, description, src, index = 0, onImageLoad }) {
   const [flipped, setFlipped] = React.useState(false)
   const cardId = React.useId()
   const [loaded, setLoaded] = React.useState(false)
+  const [visible, setVisible] = React.useState(index < 6) // render inmediato primeras 2 filas aprox
+  const ref = React.useRef(null)
+
+  React.useEffect(() => {
+    if (visible) return
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === 'undefined') { setVisible(true); return }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          setVisible(true)
+          io.disconnect()
+        }
+      })
+    }, { rootMargin: '300px' })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [visible])
   return (
-    <div className="group relative">
+    <div className="group relative" ref={ref}>
       {/* Glow decorativo como en Home */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/20 to-purple-600/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
       <button
@@ -327,20 +340,22 @@ function FlipCard({ title, description, src, index = 0, onImageLoad }) {
             {/* Frente */}
             <div className="flip-card-front relative bg-[var(--card-bg)] border border-white/10 shadow-xl hover:-translate-y-2 transition-all duration-500 p-3">
               {/* Skeleton mientras la imagen carga */}
-              {!loaded && (
+              {(!loaded || !visible) && (
                 <div className="w-full h-48 md:h-56 rounded-lg bg-white/5 animate-pulse" />
               )}
-              <img
-                src={src}
-                alt={title}
-                className={`w-full h-48 md:h-56 rounded-lg bg-[var(--bg-color)]/40 p-2 object-contain transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-                loading="lazy"
-                decoding="async"
-                sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-                fetchpriority={index < 3 ? 'high' : undefined}
-                onLoad={() => { setLoaded(true); onImageLoad && onImageLoad() }}
-                onError={() => { setLoaded(true); onImageLoad && onImageLoad() }}
-              />
+              {visible && (
+                <img
+                  src={src}
+                  alt={title}
+                  className={`w-full h-48 md:h-56 rounded-lg bg-[var(--bg-color)]/40 p-2 object-contain transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+                  loading="lazy"
+                  decoding="async"
+                  sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                  fetchpriority={index < 3 ? 'high' : undefined}
+                  onLoad={() => { setLoaded(true); onImageLoad && onImageLoad() }}
+                  onError={() => { setLoaded(true); onImageLoad && onImageLoad() }}
+                />
+              )}
               <div className="mt-3 text-center">
                 <h4 id={`${cardId}-title`} className="text-base md:text-lg font-semibold text-[var(--heading-color)]">{title}</h4>
               </div>
