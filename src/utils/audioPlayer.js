@@ -1,4 +1,5 @@
 // Utility para reproducir frecuencias de audio
+import { logger } from './logger'
 let currentGlobalAudio = null; // Variable global para controlar el audio actual
 
 export const playFrequency = async (hz) => {
@@ -10,14 +11,14 @@ export const playFrequency = async (hz) => {
     const audio = document.createElement('audio');
     
     const audioFile = `/audio/${hz}.mp3`;
-    console.log('🎵 Playing frequency:', hz, 'File:', audioFile);
+  logger.info('🎵 Playing frequency:', hz, 'File:', audioFile);
     
     // Event listeners
     audio.addEventListener('canplaythrough', () => {
-      console.log('✅ Audio ready to play');
+  logger.info('✅ Audio ready to play');
       audio.play()
         .then(() => {
-          console.log('✅ Audio playing successfully');
+          logger.info('✅ Audio playing successfully');
           currentGlobalAudio = audio; // Guardar referencia global
           resolve(audio);
         })
@@ -25,7 +26,7 @@ export const playFrequency = async (hz) => {
     });
     
     audio.addEventListener('error', (e) => {
-      console.error('❌ Audio error:', e, audio.error);
+  logger.error('❌ Audio error:', e, audio.error);
       reject(new Error(`Audio error: ${audio.error?.message || 'Unknown error'}`));
     });
     
@@ -45,7 +46,7 @@ export const playFrequency = async (hz) => {
 };
 
 export const stopAllAudio = () => {
-  console.log('🛑 Stopping all audio');
+  logger.info('🛑 Stopping all audio');
   
   // Detener el audio global actual
   if (currentGlobalAudio) {

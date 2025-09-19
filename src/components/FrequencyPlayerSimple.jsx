@@ -1,5 +1,6 @@
 import React from 'react'
 import { playFrequency, stopAllAudio } from '../utils/audioPlayer'
+import { logger } from '../utils/logger'
 
 const FrequencyPlayerSimple = ({ hz, label, sefirotId = null, onPlayStart = null, onPlayStop = null }) => {
   const [isPlaying, setIsPlaying] = React.useState(false);
@@ -13,7 +14,7 @@ const FrequencyPlayerSimple = ({ hz, label, sefirotId = null, onPlayStart = null
   }, []);
 
   const stop = React.useCallback(() => {
-    console.log('🛑 FrequencyPlayer stop called for', hz);
+  logger.info('🛑 FrequencyPlayer stop called for', hz);
     
     if (currentAudio) {
       currentAudio.pause();
@@ -88,7 +89,7 @@ const FrequencyPlayerSimple = ({ hz, label, sefirotId = null, onPlayStart = null
       }
       
     } catch (error) {
-      console.error('❌ Error al reproducir la frecuencia:', error);
+  logger.error('❌ Error al reproducir la frecuencia:', error);
       showToast(`Error al reproducir ${hz} Hz: ${error.message}`);
       setIsPlaying(false);
       setIsLoading(false);

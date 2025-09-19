@@ -1,67 +1,6 @@
 import React from 'react'
 import PageWrapper from '../components/PageWrapper'
 
-// Componente de estrellas sutiles
-const StarField = () => {
-  const [windowSize, setWindowSize] = React.useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
-    height: typeof window !== 'undefined' ? window.innerHeight : 768
-  });
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const stars = React.useMemo(() => {
-    const starArray = [];
-    // Adaptativo según el dispositivo para optimizar rendimiento
-    const starCount = windowSize.width < 768 ? 12 : windowSize.width < 1024 ? 20 : 30;
-    
-    for (let i = 0; i < starCount; i++) {
-      starArray.push({
-        id: i,
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        animationDelay: Math.random() * 6,
-        animationDuration: 3 + Math.random() * 4,
-        size: Math.random() * 1.5 + 0.8
-      });
-    }
-    return starArray;
-  }, [windowSize]);
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {stars.map(star => (
-        <div
-          key={star.id}
-          className="absolute bg-white/20 rounded-full animate-pulse"
-          style={{
-            left: `${star.left}%`,
-            top: `${star.top}%`,
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            animationDelay: `${star.animationDelay}s`,
-            animationDuration: `${star.animationDuration}s`,
-            animationTimingFunction: 'ease-in-out',
-            animationIterationCount: 'infinite',
-            boxShadow: '0 0 4px rgba(255, 255, 255, 0.3)',
-            filter: 'blur(0.3px)'
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
 export default function HomePage({ onNavigate }) {
   // Estado para controlar qué tarjetas están volteadas
   const [flippedCards, setFlippedCards] = React.useState({
@@ -130,8 +69,7 @@ export default function HomePage({ onNavigate }) {
         {/* Fondo degradado suave */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/10 via-purple-900/5 to-blue-900/10"></div>
         
-        {/* Sistema de estrellas sutiles */}
-        <StarField />
+  {/* Fondo dinámico eliminado */}
         
         {/* Contenido Hero */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
@@ -158,11 +96,7 @@ export default function HomePage({ onNavigate }) {
           </button>
         </div>
         
-        {/* Partículas flotantes decorativas */}
-        <div className="absolute top-20 left-10 w-4 h-4 bg-[var(--primary-color)] rounded-full opacity-70 animate-bounce" style={{animationDelay: '0s'}}></div>
-        <div className="absolute top-40 right-20 w-3 h-3 bg-yellow-400 rounded-full opacity-60 animate-bounce" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-40 left-20 w-5 h-5 bg-purple-400 rounded-full opacity-50 animate-bounce" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-10 w-2 h-2 bg-[var(--secondary-color)] rounded-full opacity-80 animate-bounce" style={{animationDelay: '0.5s'}}></div>
+  {/* Partículas decorativas eliminadas */}
       </div>
 
       {/* Introducción */}

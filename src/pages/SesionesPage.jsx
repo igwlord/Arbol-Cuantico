@@ -1,15 +1,20 @@
 import React from 'react'
 import PageWrapper from '../components/PageWrapper'
+import useBodyScrollLock from '../hooks/useBodyScrollLock'
 import Toast from '../components/Toast'
 import SefirotMeasurementGrid from '../components/SefirotMeasurementGrid'
 import GlobalMeasurementGrid from '../components/GlobalMeasurementGrid'
 import { useUserPrefs } from '../context/UserPrefsContext'
 import { SEFIROT_DATA } from '../data/index.jsx'
+import useFocusTrap from '../hooks/useFocusTrap'
 
 export default function SesionesPage() {
     const { prefs, sessions, setSessions } = useUserPrefs();
     const [toastMessage, setToastMessage] = React.useState('');
     const [showOpeningModal, setShowOpeningModal] = React.useState(false);
+    const openModalButtonRef = React.useRef(null);
+    const modalContainerRef = React.useRef(null);
+    const modalCloseButtonRef = React.useRef(null);
     
     // Estados para acordeones (en móvil)
     const [expandedSteps, setExpandedSteps] = React.useState({
@@ -18,6 +23,43 @@ export default function SesionesPage() {
         step3: false,
         step4: false
     });
+
+    // Detectar desktop para desactivar el colapso en pantallas grandes
+    const [isDesktop, setIsDesktop] = React.useState(() =>
+        typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)').matches : false
+    );
+    React.useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const mq = window.matchMedia('(min-width: 768px)');
+        const onChange = (e) => setIsDesktop(e.matches);
+        mq.addEventListener ? mq.addEventListener('change', onChange) : mq.addListener(onChange);
+        setIsDesktop(mq.matches);
+        return () => {
+            mq.removeEventListener ? mq.removeEventListener('change', onChange) : mq.removeListener(onChange);
+        };
+    }, []);
+
+    // Refs y alturas medidas para cada sección (mejor fiabilidad en móviles)
+    const stepRefs = React.useRef({ step1: null, step2: null, step3: null, step4: null });
+    const [measuredHeights, setMeasuredHeights] = React.useState({ step1: 0, step2: 0, step3: 0, step4: 0 });
+    const measureHeights = React.useCallback(() => {
+        setMeasuredHeights((prev) => ({
+            step1: stepRefs.current.step1?.scrollHeight || 0,
+            step2: stepRefs.current.step2?.scrollHeight || 0,
+            step3: stepRefs.current.step3?.scrollHeight || 0,
+            step4: stepRefs.current.step4?.scrollHeight || 0,
+        }));
+    }, []);
+    React.useEffect(() => {
+        // Medir al montar y cuando cambia el estado de expansión
+        measureHeights();
+    }, [expandedSteps.step1, expandedSteps.step2, expandedSteps.step3, expandedSteps.step4, measureHeights]);
+    React.useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const onResize = () => measureHeights();
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [measureHeights]);
     
     const toggleStep = (step) => {
         setExpandedSteps(prev => ({
@@ -35,19 +77,16 @@ export default function SesionesPage() {
         }, 100)
     }
 
-    // Bloquear scroll del body cuando el modal está abierto
-    React.useEffect(() => {
-        if (showOpeningModal) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = 'unset'
-        }
-        
-        // Cleanup al desmontar el componente
-        return () => {
-            document.body.style.overflow = 'unset'
-        }
-    }, [showOpeningModal])
+    // iOS-safe scroll lock when modal is open
+    useBodyScrollLock(showOpeningModal)
+    useFocusTrap({
+        containerRef: modalContainerRef,
+        isOpen: showOpeningModal,
+        initialFocusRef: modalCloseButtonRef,
+        closeOnEscape: true,
+        onClose: () => setShowOpeningModal(false),
+        returnFocusRef: openModalButtonRef,
+    })
     
     const initialReadings = SEFIROT_DATA.reduce((acc, sefira) => {
         acc[sefira.id] = { antes: 5, despues: 5 };
@@ -136,12 +175,12 @@ export default function SesionesPage() {
 
     return (
         <PageWrapper>
-            <header className="text-center mb-12">
+            <header className="text-center mb-12" aria-hidden={showOpeningModal ? 'true' : undefined}>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--heading-color)] mb-4">Registro de Sesión</h1>
                 <p className="text-lg text-[var(--text-color)]/80 max-w-3xl mx-auto">Sigue los pasos para registrar y guardar la sesión de un consultante.</p>
             </header>
 
-            <div className="bg-[var(--card-bg)] rounded-xl p-4 sm:p-6 md:p-8 space-y-4 md:space-y-8">
+            <div className="bg-[var(--card-bg)] rounded-xl p-4 sm:p-6 md:p-8 space-y-4 md:space-y-8" aria-hidden={showOpeningModal ? 'true' : undefined}>
                 {/* Step 1: Opening and Space Cleaning */}
                 <div className="border border-white/10 rounded-lg">
                     {/* Header clicable en móvil */}
@@ -160,11 +199,17 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 1: Apertura de la sesión y limpieza del espacio</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step1 ? 'max-h-96' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-4">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step1 ? `${measuredHeights.step1}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step1 = el)} className="p-4 space-y-4">
                             <button 
                                 onClick={openModal}
+                                ref={openModalButtonRef}
                                 className="w-full bg-[var(--primary-color)] text-white px-6 py-4 rounded-lg hover:opacity-90 transition-opacity text-lg font-semibold"
                             >
                                 Ver instrucciones de apertura y limpieza
@@ -191,9 +236,14 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 2: Datos y Medición Global</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step2 ? 'max-h-screen' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-4">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step2 ? `${measuredHeights.step2}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step2 = el)} className="p-4 space-y-4">
                             <input
                                 type="text"
                                 placeholder="Nombre del Consultante"
@@ -240,9 +290,14 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 3: Medición por Sefirá</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step3 ? 'max-h-screen' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-4">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step3 ? `${measuredHeights.step3}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step3 = el)} className="p-4 space-y-4">
                             <p className="text-[var(--text-color)]/80 italic">
                                 Usar el péndulo para medir en el biometro cada sefira y registrar su estado antes y después de la armonización.
                             </p>
@@ -273,9 +328,14 @@ export default function SesionesPage() {
                         <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">Paso 4: Medición global y comando de cierre</h3>
                     </div>
                     
-                    {/* Contenido colapsable */}
-                    <div className={`md:block overflow-hidden transition-all duration-300 ${expandedSteps.step4 ? 'max-h-screen' : 'max-h-0'} md:max-h-none`}>
-                        <div className="p-4 space-y-6">
+                    {/* Contenido colapsable (altura medida para móviles) */}
+                    <div
+                        className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
+                        style={{
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step4 ? `${measuredHeights.step4}px` : '0px',
+                        }}
+                    >
+                        <div ref={(el) => (stepRefs.current.step4 = el)} className="p-4 space-y-6">
                             <div className="space-y-4">
                                 <p className="text-[var(--text-color)] mb-4">
                                     <strong>1.</strong> Mide de nuevo la energía global situándote en el sefira Da'at
@@ -311,26 +371,33 @@ export default function SesionesPage() {
                 <div 
                     className="fixed inset-0 bg-black/90 z-50 overflow-y-auto backdrop-blur-sm flex items-start justify-center p-3" 
                     onClick={() => setShowOpeningModal(false)}
+                    role="dialog" aria-modal="true" aria-labelledby="opening-modal-title"
                 >
                     <div 
-                        className="bg-[var(--card-bg)] rounded-2xl max-w-md sm:max-w-2xl w-full mt-6 mb-6 max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--primary-color)]/30 relative flex flex-col" 
+                        className="bg-[var(--card-bg)] rounded-2xl max-w-md sm:max-w-2xl w-full mt-6 mb-6 max-h-[90vh] overflow-y-auto nice-scroll shadow-2xl border border-white/10 relative flex flex-col" 
                         onClick={e => e.stopPropagation()}
+                        ref={modalContainerRef}
+                        tabIndex={-1}
                         style={{
                             backgroundColor: 'var(--card-bg)',
                             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
                         }}
                     >
                         {/* Header mejorado para móviles */}
-                        <div className="bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 p-4 sm:p-6 rounded-t-2xl border-b border-[var(--primary-color)]/20 flex-shrink-0">
+                        <div className="bg-gradient-to-r from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 p-4 sm:p-6 rounded-t-2xl border-b border-white/10 flex-shrink-0">
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
-                                    <h3 className="text-xl sm:text-2xl font-serif text-[var(--heading-color)] mb-1">✨ Apertura de Sesión</h3>
-                                    <p className="text-sm text-[var(--text-color)]/70">Paso 1: Preparación del espacio sagrado</p>
+                                    <div className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-white/5 border border-white/10 mb-2">
+                                        <span className="text-xs">Paso 1</span>
+                                        <span className="text-xs text-[var(--text-color)]/70">Preparación del espacio</span>
+                                    </div>
+                                    <h3 id="opening-modal-title" className="text-xl sm:text-2xl font-serif text-[var(--heading-color)]">✨ Apertura de Sesión</h3>
                                 </div>
                                 <button 
                                     onClick={() => setShowOpeningModal(false)}
-                                    className="ml-3 w-8 h-8 rounded-full bg-[var(--primary-color)]/10 hover:bg-[var(--primary-color)]/20 text-[var(--text-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center flex-shrink-0"
+                                    className="ml-3 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[var(--text-color)] hover:text-[var(--primary-color)] transition-all duration-200 flex items-center justify-center flex-shrink-0"
                                     aria-label="Cerrar modal"
+                                    ref={modalCloseButtonRef}
                                 >
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -341,54 +408,66 @@ export default function SesionesPage() {
                         </div>
                         
                         {/* Contenido optimizado para móviles */}
-                        <div className="p-4 sm:p-6 space-y-5 flex-1">
-                            
-                            {/* Paso 1: Limpieza */}
-                            <div className="bg-gradient-to-r from-green-500/10 via-green-500/5 to-transparent p-4 rounded-xl border-l-4 border-green-500">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <span className="text-lg">🌿</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-green-400 mb-2 text-base">Limpia el espacio</h4>
-                                        <p className="text-[var(--text-color)]/80 text-sm leading-relaxed">
-                                            Usa spray áurico, sahumo o incienso. Respira profundo para conectar con el momento presente.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {/* Paso 2: Comando */}
-                            <div className="bg-gradient-to-r from-[var(--primary-color)]/10 via-[var(--primary-color)]/5 to-transparent p-4 rounded-xl border-l-4 border-[var(--primary-color)]">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-[var(--primary-color)]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <span className="text-lg">✨</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-[var(--primary-color)] mb-3 text-base">Comando de Apertura</h4>
-                                        <div className="bg-[var(--card-bg)] p-4 rounded-lg border border-[var(--primary-color)]/20 shadow-inner">
-                                            <p className="text-[var(--text-color)] text-sm leading-relaxed text-center italic font-medium">
-                                                "{openingCommand}"
+                        <div className="p-4 sm:p-6 space-y-5 flex-1 relative">
+                            {/* Fade superior e inferior para indicar scroll */}
+                            <div className="pointer-events-none absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[var(--card-bg)] to-transparent rounded-t-2xl" />
+                            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[var(--card-bg)] to-transparent rounded-b-2xl" />
+                            <div className="max-w-md mx-auto space-y-5">
+                                {/* Paso 1: Limpieza */}
+                                <div className="p-4 rounded-xl border border-white/10 bg-white/5 shadow-inner">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-green-500/15 ring-1 ring-green-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <span className="text-lg">🌿</span>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="font-semibold text-green-300 mb-2 text-base">Limpia el espacio</h4>
+                                            <p className="text-[var(--text-color)]/80 text-sm leading-relaxed">
+                                                Usa spray áurico, sahumo o incienso. Respira profundo para conectar con el momento presente.
                                             </p>
                                         </div>
-                                        <div className="mt-3 text-xs text-[var(--text-color)]/60 text-center">
-                                            💡 Recita este comando en voz alta con intención clara
-                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Recordatorio adicional */}
-                            <div className="bg-gradient-to-r from-purple-500/10 via-purple-500/5 to-transparent p-3 rounded-lg border border-purple-500/20">
-                                <div className="flex items-center gap-2 text-purple-400 text-sm">
-                                    <span>🔮</span>
-                                    <span className="font-medium">Mantén la intención pura y el corazón abierto durante todo el proceso</span>
+                                {/* Paso 2: Comando */}
+                                <div className="p-4 rounded-xl border border-white/10 bg-white/5 shadow-inner">
+                                    {/* Header: icono + título a la izquierda, copiar a la derecha */}
+                                    <div className="flex items-center justify-between gap-3 mb-2">
+                                        <div className="inline-flex items-center gap-2">
+                                            <div className="w-10 h-10 rounded-full bg-[var(--primary-color)]/15 ring-1 ring-[var(--primary-color)]/30 flex items-center justify-center flex-shrink-0">
+                                                <span className="text-lg">✨</span>
+                                            </div>
+                                            <h4 className="font-semibold text-[var(--primary-color)] text-base">Comando de Apertura</h4>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => { navigator.clipboard?.writeText(`\"${openingCommand}\"`); showToast('Comando copiado'); }}
+                                            className="text-xs px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/10"
+                                            aria-label="Copiar comando"
+                                        >Copiar</button>
+                                    </div>
+                                    {/* Quote a ancho completo */}
+                                    <div className="bg-[var(--card-bg)]/80 p-4 rounded-lg border border-white/10 shadow-inner">
+                                        <p className="text-[var(--text-color)] text-[0.95rem] leading-6 sm:leading-relaxed italic">
+                                            "{openingCommand}"
+                                        </p>
+                                    </div>
+                                    <div className="mt-3 text-xs text-[var(--text-color)]/60">
+                                        💡 Recita este comando en voz alta con intención clara
+                                    </div>
+                                </div>
+
+                                {/* Recordatorio adicional */}
+                                <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+                                    <div className="flex items-center gap-2 text-[var(--text-color)]/80 text-sm">
+                                        <span>🔮</span>
+                                        <span className="font-medium">Mantén la intención pura y el corazón abierto durante todo el proceso</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        {/* Footer del modal */}
-                        <div className="p-4 sm:p-6 bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/95 border-t border-[var(--primary-color)]/10 rounded-b-2xl flex-shrink-0">
+                        {/* Footer del modal (con safe-area) */}
+                        <div className="p-4 sm:p-6 bg-gradient-to-r from-[var(--card-bg)] to-[var(--card-bg)]/95 border-t border-white/10 rounded-b-2xl flex-shrink-0" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
                             <button 
                                 onClick={() => setShowOpeningModal(false)}
                                 className="w-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color)]/80 text-white px-6 py-3 rounded-full hover:opacity-90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl text-sm sm:text-base"
@@ -401,7 +480,7 @@ export default function SesionesPage() {
             )}
 
             {/* Session History */}
-            <div className="mt-16">
+            <div className="mt-16" aria-hidden={showOpeningModal ? 'true' : undefined}>
                 <h2 className="text-2xl sm:text-3xl font-serif text-[var(--heading-color)] mb-6 text-center">Historial de Sesiones</h2>
                 {sessions.length > 0 ? (
                     <div className="space-y-4">

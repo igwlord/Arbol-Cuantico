@@ -1,7 +1,18 @@
 import React from 'react'
 import { SEFIROT_DATA } from '../data'
 
-const TreeOfLifeDiagram = ({ onNodeClick, activeSefirotId, isPlaying }) => {
+const TreeOfLifeDiagram = ({ onNodeClick, activeSefirotId, isPlaying, enableClickParticles = false }) => {
+  const [bursts, setBursts] = React.useState([]);
+  const rafRef = React.useRef(null);
+  const [animNow, setAnimNow] = React.useState(0);
+  const prefersReducedMotion = React.useMemo(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    try {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (_) {
+      return false;
+    }
+  }, []);
   // Convertir SEFIROT_DATA a un objeto indexado por id para fácil acceso
   const sefirotDescriptions = SEFIROT_DATA.reduce((acc, sefira) => {
     acc[sefira.id] = sefira;
@@ -37,6 +48,50 @@ const TreeOfLifeDiagram = ({ onNodeClick, activeSefirotId, isPlaying }) => {
     jojma: 'url(#glowViolet)',
     keter: 'url(#glowMagenta)'
   };
+
+  // Helper: dispara un estallido de partículas en (cx, cy)
+  const triggerBurst = React.useCallback((cx, cy, color) => {
+    if (!enableClickParticles || prefersReducedMotion) return;
+    const id = Date.now() + Math.random();
+    const particleCount = 18;
+    // Generar destinos en unidades del viewBox (para que escale bien)
+    const particles = Array.from({ length: particleCount }).map((_, i) => {
+      const angle = (Math.PI * 2 * i) / particleCount + (Math.random() * 0.6 - 0.3);
+      const distance = 8 + Math.random() * 10; // unidades del viewBox
+      const tx = cx + Math.cos(angle) * distance;
+      const ty = cy + Math.sin(angle) * distance;
+      return { tx, ty };
+    });
+    const start = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    const duration = 650; // ms
+    setBursts(prev => [...prev, { id, cx, cy, color, particles, start, duration }]);
+    // Asegurar el loop de animación activo
+    if (!rafRef.current) {
+      const tick = () => {
+        setAnimNow(typeof performance !== 'undefined' ? performance.now() : Date.now());
+        rafRef.current = requestAnimationFrame(tick);
+      };
+      rafRef.current = requestAnimationFrame(tick);
+    }
+  }, [enableClickParticles, prefersReducedMotion]);
+
+  // Limpieza de RAF en unmount
+  React.useEffect(() => () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+  }, []);
+
+  // Remover bursts completados y detener loop si no quedan
+  React.useEffect(() => {
+    if (!bursts.length) return;
+    const now = animNow || (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    const remaining = bursts.filter(b => now - b.start < b.duration + 40);
+    if (remaining.length !== bursts.length) setBursts(remaining);
+    if (remaining.length === 0 && rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+  }, [animNow, bursts.length]);
 
   // Posiciones según modelo.md
   const positions = {
@@ -171,7 +226,16 @@ const TreeOfLifeDiagram = ({ onNodeClick, activeSefirotId, isPlaying }) => {
           const glowGradient = sefirotGlowGradients[sefira.id];
 
           return (
-            <g key={sefira.id} onClick={() => onNodeClick(sefira, sefirotDescriptions[sefira.id])} className="cursor-pointer group">
+            <g
+              key={sefira.id}
+              onClick={() => {
+                // Efecto de partículas opcional
+                triggerBurst(position.cx, position.cy, sefirotColor);
+                // Propagar evento al consumidor
+                if (onNodeClick) onNodeClick(sefira, sefirotDescriptions[sefira.id]);
+              }}
+              className="cursor-pointer group"
+            >
               {/* Círculo de glow de fondo para reproducción */}
               {isCurrentlyPlaying && (
                 <circle 
@@ -222,6 +286,50 @@ const TreeOfLifeDiagram = ({ onNodeClick, activeSefirotId, isPlaying }) => {
           )
         })}
       </g>
+
+      {/* Capa de partículas (encima de los nodos) */}
+      {enableClickParticles && !prefersReducedMotion && (
+        <g className="pointer-events-none">
+          {bursts.map(burst => {
+            const now = animNow || (typeof performance !== 'undefined' ? performance.now() : Date.now());
+            const t = Math.min(1, (now - burst.start) / burst.duration);
+            const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+            const p = easeOut(t);
+            const ringR = 12 * p;
+            const ringOpacity = 0.6 * (1 - p);
+            return (
+              <g key={burst.id}>
+                {/* Anillo de onda expansiva */}
+                <circle
+                  cx={burst.cx}
+                  cy={burst.cy}
+                  r={ringR}
+                  fill="none"
+                  stroke={burst.color}
+                  strokeWidth="0.8"
+                  opacity={ringOpacity}
+                />
+                {burst.particles.map((pt, idx) => {
+                  const cx = burst.cx + (pt.tx - burst.cx) * p;
+                  const cy = burst.cy + (pt.ty - burst.cy) * p;
+                  const r = 2 - 1.4 * p;
+                  const opacity = 1 - p;
+                  return (
+                    <circle
+                      key={`${burst.id}-${idx}`}
+                      cx={cx}
+                      cy={cy}
+                      r={Math.max(0.4, r)}
+                      fill={burst.color}
+                      opacity={Math.max(0, opacity)}
+                    />
+                  );
+                })}
+              </g>
+            );
+          })}
+        </g>
+      )}
     </svg>
   )
 }

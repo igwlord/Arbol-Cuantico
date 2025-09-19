@@ -7,16 +7,10 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
   
   return (
     <>
-      {/* Partículas de fondo sutiles */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-1 h-1 bg-[var(--primary-color)] rounded-full animate-pulse opacity-60"></div>
-        <div className="absolute top-40 right-20 w-1.5 h-1.5 bg-[var(--secondary-color)] rounded-full animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-32 left-1/4 w-1 h-1 bg-[var(--primary-color)] rounded-full animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-60 right-1/3 w-0.5 h-0.5 bg-[var(--secondary-color)] rounded-full animate-pulse opacity-70" style={{animationDelay: '0.5s'}}></div>
-      </div>
+      {/* Fondo dinámico eliminado */}
 
       {/* Navbar colapsable para móvil / completo para desktop */}
-      <nav className="fixed bottom-1 md:bottom-4 left-1/2 transform -translate-x-1/2 z-40 bg-[var(--primary-color)] bg-opacity-15 backdrop-blur-xl rounded-full shadow-2xl border border-white/10 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]">
+  <nav aria-label="Navegación principal" className="fixed bottom-1 md:bottom-4 left-1/2 transform -translate-x-1/2 z-40 bg-[var(--primary-color)] bg-opacity-15 backdrop-blur-xl rounded-full shadow-2xl border border-white/10 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]">
         
         {/* Versión móvil colapsable */}
         <div className="md:hidden">
@@ -28,6 +22,8 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                 <button
                   className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-[var(--primary-color)] to-purple-600 text-white shadow-lg shadow-[var(--primary-color)]/50 relative overflow-hidden"
                   title={currentItem.title}
+                  aria-label={currentItem.title}
+                  aria-current="page"
                 >
                   <span className="text-sm relative z-10 drop-shadow-sm">
                     {currentItem.icon}
@@ -41,6 +37,7 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                 onClick={() => setIsExpanded(true)}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20 transition-all duration-300"
                 title="Menú"
+                aria-label="Abrir menú"
               >
                 <span className="text-sm">☰</span>
               </button>
@@ -63,6 +60,8 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                         : 'text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20'
                     }`}
                     title={item.title}
+                    aria-label={item.title}
+                    aria-current={isActive ? 'page' : undefined}
                   >
                     <span className="text-sm relative z-10 drop-shadow-sm">
                       {item.icon}
@@ -82,6 +81,7 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                 }}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20 transition-all duration-300"
                 title="Configuración"
+                aria-label="Abrir configuración"
               >
                 <span className="text-sm">⚙️</span>
               </button>
@@ -91,6 +91,7 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                 onClick={() => setIsExpanded(false)}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20 transition-all duration-300"
                 title="Cerrar"
+                aria-label="Cerrar menú"
               >
                 <span className="text-sm">✕</span>
               </button>
@@ -112,6 +113,8 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
                     : 'text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20 hover:scale-105 hover:shadow-lg hover:shadow-[var(--primary-color)]/30'
                 }`}
                 title={item.title}
+                aria-label={item.title}
+                aria-current={isActive ? 'page' : undefined}
               >
                 {/* Efecto de brillo en hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
@@ -133,6 +136,7 @@ export default function NavbarDock({ currentPage, onNavigate, navItems, onConfig
             onClick={onConfigClick}
             className="w-12 h-12 rounded-full flex items-center justify-center text-[var(--text-color)] hover:bg-gradient-to-br hover:from-[var(--primary-color)]/20 hover:to-purple-600/20 hover:scale-105 hover:shadow-lg hover:shadow-[var(--primary-color)]/30 transition-all duration-300 ease-out relative overflow-hidden group"
             title="Configuración"
+            aria-label="Abrir configuración"
           >
             {/* Efecto de brillo en hover */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>

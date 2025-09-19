@@ -1,10 +1,8 @@
 import React from 'react'
-import Starfield from './Starfield'
 
 export default function PageWrapper({ children, title }) {
   return (
     <div className="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)] relative overflow-x-hidden">
-      <Starfield />
       <div className="relative z-10">
         {title && (
           <header className="text-center py-8">

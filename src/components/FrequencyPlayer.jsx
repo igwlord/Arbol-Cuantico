@@ -1,5 +1,6 @@
 import React from 'react'
 import { getAudioFile } from '../utils/audioFiles.js'
+import { logger } from '../utils/logger'
 
 const FrequencyPlayer = ({ hz, label, sefirotId = null, onPlayStart = null, onPlayStop = null }) => {
   const [isPlaying, setIsPlaying] = React.useState(false);
@@ -39,10 +40,10 @@ const FrequencyPlayer = ({ hz, label, sefirotId = null, onPlayStart = null, onPl
       
       // Get the audio file path for this frequency
       const audioFile = getAudioFile(hz);
-      console.log('🎵 FrequencyPlayer - Trying to play:', { hz, audioFile, label });
+  logger.info('🎵 FrequencyPlayer - Trying to play:', { hz, audioFile, label });
       
       if (!audioFile) {
-        console.error('❌ No audio file found for frequency:', hz);
+  logger.error('❌ No audio file found for frequency:', hz);
         showToast(`No se encontró archivo para la frecuencia ${hz} Hz`);
         setIsLoading(false);
         return;
@@ -61,18 +62,18 @@ const FrequencyPlayer = ({ hz, label, sefirotId = null, onPlayStart = null, onPl
       
       // Set up event listeners
       const handleCanPlay = () => {
-        console.log('✅ Audio can play');
+  logger.info('✅ Audio can play');
         setIsLoading(false);
       };
       
       const handleLoadStart = () => {
-        console.log('📥 Audio loading started');
+  logger.info('📥 Audio loading started');
         setIsLoading(true);
       };
       
       const handleError = (e) => {
-        console.error('❌ Audio error:', e);
-        console.error('❌ Audio error details:', { 
+        logger.error('❌ Audio error:', e);
+        logger.error('❌ Audio error details:', { 
           src: audioRef.current?.src, 
           error: audioRef.current?.error,
           networkState: audioRef.current?.networkState,
@@ -112,7 +113,7 @@ const FrequencyPlayer = ({ hz, label, sefirotId = null, onPlayStart = null, onPl
       audioRef.current.volume = 0.7;
       
       // Set source and load
-      console.log('🎧 Setting audio source:', audioFile);
+  logger.info('🎧 Setting audio source:', audioFile);
       audioRef.current.src = audioFile;
       
       // Wait for the audio to load before trying to play
@@ -134,12 +135,12 @@ const FrequencyPlayer = ({ hz, label, sefirotId = null, onPlayStart = null, onPl
         audioRef.current.load();
       });
       
-      console.log('▶️ Attempting to play audio...');
+  logger.info('▶️ Attempting to play audio...');
       const playPromise = audioRef.current.play();
       
       if (playPromise !== undefined) {
         await playPromise;
-        console.log('✅ Audio playing successfully');
+  logger.info('✅ Audio playing successfully');
       }
       
       setIsPlaying(true);
@@ -160,8 +161,8 @@ const FrequencyPlayer = ({ hz, label, sefirotId = null, onPlayStart = null, onPl
       }
       
     } catch (error) {
-      console.error('❌ Error al reproducir la frecuencia:', error);
-      console.error('❌ Error details:', { hz, label, audioFile: getAudioFile(hz) });
+  logger.error('❌ Error al reproducir la frecuencia:', error);
+  logger.error('❌ Error details:', { hz, label, audioFile: getAudioFile(hz) });
       showToast('Error al reproducir el audio');
       setIsPlaying(false);
       setIsLoading(false);
