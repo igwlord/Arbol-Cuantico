@@ -8,6 +8,29 @@ export default function QuienSoyPage({ onNavigate }) {
   const openServicesButtonRef = React.useRef(null)
   const servicesModalRef = React.useRef(null)
   const servicesCloseButtonRef = React.useRef(null)
+  const [expandedBio, setExpandedBio] = React.useState(false)
+  const [isDesktop, setIsDesktop] = React.useState(() => (
+    typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)').matches : false
+  ))
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(min-width: 768px)')
+    const onChange = (e) => setIsDesktop(e.matches)
+    mq.addEventListener ? mq.addEventListener('change', onChange) : mq.addListener(onChange)
+    setIsDesktop(mq.matches)
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener('change', onChange) : mq.removeListener(onChange)
+    }
+  }, [])
+
+  const bioParagraphs = [
+    'Soy Guido Di Pietro, Terapeuta holístico, Coach Ontologico, con más de 10 años acompañando a personas en procesos de transformación profunda.',
+    'Creo en la fuerza del encuentro humano, en el poder de la palabra, la energía y la intención para abrir caminos hacia una vida más plena y consciente.',
+    'Desde mi infancia, mis padres, grandes maestros me enseñaron el amor por lo sutil y lo invisible, guiándome en prácticas como Reiki, Registros Akáshicos y diversos talleres de técnicas de armonización. Esa semilla despertó en mí la vocación de servicio que hoy me mueve.',
+    'En paralelo, desarrollé mi carrera en diseño gráfico, programacion y tecnología, integrando creatividad y visión moderna con canales ancestrales como la gemoterapia, la radiestesia y la geometría sagrada.\n          Considero que la verdadera sanación surge cuando logramos unir lo antiguo con lo nuevo, lo espiritual con lo cotidiano, lo personal con lo universal para sortear esos obstaculos que nos impidien conectarnos.',
+    'Mi propósito es ser puente y acompaño a quienes buscan claridad, alivio y expansión, brindando un espacio seguro, amoroso y transformador.'
+  ]
 
   // Función para abrir modal y posicionarlo correctamente
   const openModal = () => {
@@ -37,18 +60,51 @@ export default function QuienSoyPage({ onNavigate }) {
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-[var(--heading-color)] mb-2">Quién soy</h1>
         <p className="text-lg sm:text-xl italic text-[var(--text-color)]/80">Un camino entre la luz, el diseño y la conciencia</p>
       </header>
-  <div className="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 mb-8 sm:mb-12" aria-hidden={showModal ? 'true' : undefined}>
-        <img src="https://placehold.co/150x150/FFF5E1/D97706?text=GDP" alt="Guido Di Pietro" className="w-32 sm:w-36 h-32 sm:h-36 rounded-full object-cover shadow-lg border-4 border-[var(--secondary-color)]"/>
-        <div className="text-base sm:text-lg text-[var(--text-color)]/90 space-y-3 sm:space-y-4 text-center md:text-left">
-          <p>Soy Guido Di Pietro, coach ontológico y terapeuta holístico con más de 10 años acompañando transformaciones.</p>
-          <p>Mi camino comenzó en la infancia con mi madre, gran maestra espiritual, quien me introdujo en Reiki, Registros Akáshicos y armonización.</p>
-          <p>Trabajé en diseño gráfico y tecnología; en paralelo profundicé en gemoterapia, radiestesia y geometría sagrada.</p>
-          <p>Integro lo ancestral con lo moderno para llevar tecnologías de luz a la vida cotidiana.</p>
+  <div className="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 mb-8 sm:mb-12 max-w-5xl mx-auto" aria-hidden={showModal ? 'true' : undefined}>
+        <div className="portrait-frame portrait-rect w-28 sm:w-36 md:w-44 lg:w-56 xl:w-64 flex-shrink-0" style={{ aspectRatio: '3 / 4' }}>
+          <div className="portrait-inner w-full h-full">
+            <img 
+              src="/images/gdp.webp"
+              alt="Foto de Guido Di Pietro"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: 'center 30%' }}
+              loading="eager" decoding="async" fetchpriority="high"
+              sizes="(max-width: 640px) 7rem, (max-width: 1024px) 10rem, 14rem"
+            />
+          </div>
+        </div>
+        <div className="text-base sm:text-lg text-[var(--text-color)]/90 space-y-3 sm:space-y-4 text-center md:text-left leading-relaxed md:leading-8 md:flex-1 md:max-w-3xl">
+          {bioParagraphs.map((text, idx) => {
+            // Resaltar el nombre en el primer párrafo
+            if (idx === 0) {
+              const highlighted = text.replace('Soy Guido Di Pietro', 'Soy <span class=\\"quote-glow animate-subtle-glow\\">Guido Di Pietro</span>')
+              if (!isDesktop && !expandedBio && idx >= 2) return null
+              return (
+                <p key={idx} dangerouslySetInnerHTML={{ __html: highlighted }} />
+              )
+            }
+            if (!isDesktop && !expandedBio && idx >= 2) return null
+            return <p key={idx}>{text}</p>
+          })}
+
+          {!isDesktop && !expandedBio && (
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setExpandedBio(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 text-[var(--secondary-color)] hover:bg-white/10 transition"
+                aria-expanded={expandedBio}
+              >
+                Leer más
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+            </div>
+          )}
         </div>
       </div>
   <div className="my-12 sm:my-16" aria-hidden={showModal ? 'true' : undefined}>
-        <div className="bg-[var(--card-bg)] border-l-4 border-[var(--secondary-color)] p-4 sm:p-6 rounded-r-lg">
-          <blockquote className="text-lg sm:text-xl md:text-2xl italic text-center text-[var(--heading-color)] font-serif leading-relaxed">
+        <div className="bg-[var(--card-bg)]/80 p-4 sm:p-6 rounded-lg">
+          <blockquote className="text-lg sm:text-xl md:text-2xl italic text-center text-[var(--heading-color)] font-serif leading-relaxed quote-glow animate-subtle-glow">
             "Creo en unir lo ancestral con lo moderno para transformar la vida cotidiana."
           </blockquote>
         </div>

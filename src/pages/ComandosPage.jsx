@@ -47,8 +47,8 @@ export default function ComandosPage() {
                 max={1}
                 step={0.01}
                 value={getVolumeForSefirot(currentlyPlaying.sefirotId)}
-                onChange={(e) => setVolumeForSefirot(currentlyPlaying.sefirotId, parseFloat(e.target.value))}
-                className="flex-1 accent-[var(--secondary-color)]"
+                onInput={(e) => setVolumeForSefirot(currentlyPlaying.sefirotId, parseFloat(e.currentTarget.value))}
+                className="flex-1 accent-[var(--secondary-color)] touch-none overscroll-contain select-none"
                 aria-label={`Volumen para ${currentlyPlaying.label}`}
               />
               <span className="text-xs w-10 text-right text-[var(--text-color)]/60">{Math.round(getVolumeForSefirot(currentlyPlaying.sefirotId) * 100)}%</span>

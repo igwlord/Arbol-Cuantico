@@ -148,12 +148,8 @@ const FrequencyPlayerPro = ({ hz, label, sefirotId }) => {
           max={1}
           step={0.01}
           value={currentVolume}
-          onChange={(e) => {
-            // Evita saltos de scroll en móviles al mover el slider
-            try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur() } catch {}
-            setVolumeForSefirot(sefirotId, parseFloat(e.target.value))
-          }}
-          className="flex-1 accent-[var(--secondary-color)]"
+          onInput={(e) => setVolumeForSefirot(sefirotId, parseFloat(e.currentTarget.value))}
+          className="flex-1 accent-[var(--secondary-color)] touch-none overscroll-contain select-none"
           aria-label={`Volumen para ${label}`}
         />
         <span className="text-xs w-10 text-right text-[var(--text-color)]/60">{Math.round(currentVolume * 100)}%</span>
