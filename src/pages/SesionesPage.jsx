@@ -19,7 +19,7 @@ export default function SesionesPage() {
     // Estados para acordeones (en móvil)
     const [expandedSteps, setExpandedSteps] = React.useState({
         step1: false,
-        step2: false,
+        step2: true, // abre datos iniciales por defecto
         step3: false,
         step4: false
     });
@@ -43,17 +43,25 @@ export default function SesionesPage() {
     const stepRefs = React.useRef({ step1: null, step2: null, step3: null, step4: null });
     const [measuredHeights, setMeasuredHeights] = React.useState({ step1: 0, step2: 0, step3: 0, step4: 0 });
     const measureHeights = React.useCallback(() => {
-        setMeasuredHeights((prev) => ({
+        setMeasuredHeights({
             step1: stepRefs.current.step1?.scrollHeight || 0,
             step2: stepRefs.current.step2?.scrollHeight || 0,
             step3: stepRefs.current.step3?.scrollHeight || 0,
             step4: stepRefs.current.step4?.scrollHeight || 0,
-        }));
+        });
     }, []);
+    // Medición en múltiples fotogramas para asegurar layout estable (móvil/iOS)
+    const measureHeightsAsync = React.useCallback(() => {
+        measureHeights();
+        requestAnimationFrame(() => {
+            measureHeights();
+            setTimeout(() => measureHeights(), 50);
+        });
+    }, [measureHeights]);
     React.useEffect(() => {
         // Medir al montar y cuando cambia el estado de expansión
-        measureHeights();
-    }, [expandedSteps.step1, expandedSteps.step2, expandedSteps.step3, expandedSteps.step4, measureHeights]);
+        measureHeightsAsync();
+    }, [expandedSteps.step1, expandedSteps.step2, expandedSteps.step3, expandedSteps.step4, measureHeightsAsync]);
     React.useEffect(() => {
         if (typeof window === 'undefined') return;
         const onResize = () => measureHeights();
@@ -66,6 +74,8 @@ export default function SesionesPage() {
             ...prev,
             [step]: !prev[step]
         }));
+        // re-medición async tras toggle
+        setTimeout(() => measureHeightsAsync(), 0);
     };
 
     // Función para abrir modal y posicionarlo correctamente
@@ -203,7 +213,7 @@ export default function SesionesPage() {
                     <div
                         className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
                         style={{
-                            maxHeight: isDesktop ? 'none' : expandedSteps.step1 ? `${measuredHeights.step1}px` : '0px',
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step1 ? `${Math.max(measuredHeights.step1, 80)}px` : '0px',
                         }}
                     >
                         <div ref={(el) => (stepRefs.current.step1 = el)} className="p-4 space-y-4">
@@ -240,7 +250,7 @@ export default function SesionesPage() {
                     <div
                         className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
                         style={{
-                            maxHeight: isDesktop ? 'none' : expandedSteps.step2 ? `${measuredHeights.step2}px` : '0px',
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step2 ? `${Math.max(measuredHeights.step2, 120)}px` : '0px',
                         }}
                     >
                         <div ref={(el) => (stepRefs.current.step2 = el)} className="p-4 space-y-4">
@@ -287,7 +297,7 @@ export default function SesionesPage() {
                     <div
                         className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
                         style={{
-                            maxHeight: isDesktop ? 'none' : expandedSteps.step3 ? `${measuredHeights.step3}px` : '0px',
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step3 ? `${Math.max(measuredHeights.step3, 240)}px` : '0px',
                         }}
                     >
                         <div ref={(el) => (stepRefs.current.step3 = el)} className="p-4 space-y-4">
@@ -325,7 +335,7 @@ export default function SesionesPage() {
                     <div
                         className={`md:block overflow-hidden transition-[max-height] duration-300 ease-in-out`}
                         style={{
-                            maxHeight: isDesktop ? 'none' : expandedSteps.step4 ? `${measuredHeights.step4}px` : '0px',
+                            maxHeight: isDesktop ? 'none' : expandedSteps.step4 ? `${Math.max(measuredHeights.step4, 160)}px` : '0px',
                         }}
                     >
                         <div ref={(el) => (stepRefs.current.step4 = el)} className="p-4 space-y-6">

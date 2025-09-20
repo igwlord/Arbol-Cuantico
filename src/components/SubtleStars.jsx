@@ -71,6 +71,10 @@ export default function SubtleStars({ density = 0.00008 }) {
     canvas.style.width = rect.width + 'px'
     canvas.style.height = rect.height + 'px'
     const ctx = canvas.getContext('2d')
+    if (!ctx) {
+      ctxRef.current = null
+      return
+    }
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.scale(dpr, dpr)
     ctxRef.current = ctx
@@ -116,8 +120,10 @@ export default function SubtleStars({ density = 0.00008 }) {
         const ctx = ctxRef.current
         if (!ctx) { rafRef.current = requestAnimationFrame(loop); return }
         const canvas = canvasRef.current
-        const width = canvas.clientWidth
-        const height = canvas.clientHeight
+        if (!canvas) { rafRef.current = requestAnimationFrame(loop); return }
+        const width = ctx.canvas?.clientWidth || canvas.clientWidth || 0
+        const height = ctx.canvas?.clientHeight || canvas.clientHeight || 0
+        if (width === 0 || height === 0) { rafRef.current = requestAnimationFrame(loop); return }
         ctx.clearRect(0, 0, width, height)
         const dt = (t - lastTRef.current) / 1000
         lastTRef.current = t
@@ -150,8 +156,10 @@ export default function SubtleStars({ density = 0.00008 }) {
       // Sin animación: pintar una vez, partículas estáticas
       const ctx = ctxRef.current
       const canvas = canvasRef.current
-      if (ctx && canvas) {
-        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight)
+      const width = ctx?.canvas?.clientWidth || canvas?.clientWidth || 0
+      const height = ctx?.canvas?.clientHeight || canvas?.clientHeight || 0
+      if (ctx && canvas && width > 0 && height > 0) {
+        ctx.clearRect(0, 0, width, height)
         starsRef.current.forEach((s) => {
           const [r, g, b] = s.color
           ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${s.baseAlpha})`
@@ -165,6 +173,8 @@ export default function SubtleStars({ density = 0.00008 }) {
       cancelAnimationFrame(rafRef.current)
       window.removeEventListener('resize', onResize)
       ro.disconnect()
+      // limpiar refs para evitar accesos a elementos inexistentes
+      ctxRef.current = null
     }
   }, [pickPalette, resize, reducedMotion])
 
